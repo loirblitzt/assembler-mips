@@ -1,4 +1,4 @@
-TARGET=as-mips
+TARGET=builds/as-mips
 DIRNAME=`basename $(PWD)`
 CC=`which gcc`
 LD=`which gcc`
@@ -58,10 +58,12 @@ docu :
 clean : 
 	$(RM) $(TARGET) $(SRCDIR)/*.orig $(SRCDIR)/*.dbg $(SRCDIR)/*.rls $(GARBAGE)
 	$(RM) -r $(DOCDIR)/*
+	$(RM) -r builds/*
 
 archive : 
 	make clean 
 	cd .. && tar -czvf as-mips-`whoami`-`date +%d-%m-%H-%M`.tgz $(DIRNAME) && cd $(DIRNAME) 
 testlist :
-	$(LD) $^ $(UT_LIST) $(LFLAGS) $(CFLAGS_DBG) -o ut_list.exe
-	
+	$(LD) $^ $(UT_LIST) $(LFLAGS) $(CFLAGS_DBG) -o builds/ut_list.exe
+run :
+	./$(TARGET)	faketext | less

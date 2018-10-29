@@ -75,7 +75,7 @@ int main ( int argc, char *argv[] ) {
     DEBUG_MSG("source code got %d lines",nlines);
     printAllData(lex);
     /*-------------------grammar 1 analysis------------------------*/
-    
+    /* G1LoadLex(lex); */
     
     
     /* ---------------- Free memory and terminate -------------------*/

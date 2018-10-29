@@ -8,7 +8,7 @@ _sortir ce quil faut mettre dans une collection
 */
 
 /*appelle la fsmG1 toussa*/
-void getNextTokenG1(...);
+char getNextTokenG1(...);
 
 /*appelle getNextTokenG1*/
 void G1LoadLex(...);

@@ -1,1 +1,1 @@
-/* interface the tree structure to managed the symboles*/
+/* interface the tree structure to manage the symboles*/
