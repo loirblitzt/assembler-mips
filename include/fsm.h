@@ -16,6 +16,7 @@ enum _state {
 	attFinDecimal,
 	tempString,
 	attFinHexa,
+	attFinReg,
 	ETATFINAL, /* if state > ETATFINAL then he is final */
 	COM,
 	SYMB,
@@ -29,7 +30,8 @@ enum _state {
 	ETIQUETTE,
 	DIRECTIVE,
 	PARENTHESED,
-	PARENTHESEG
+	PARENTHESEG,
+	REGISTRE
 };
 typedef enum _state STATE;
 

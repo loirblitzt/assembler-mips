@@ -59,7 +59,7 @@ int main ( int argc, char *argv[] ) {
         exit( EXIT_FAILURE );
     }
 
-
+    /* used to choose the file to be compiled */
     file  	= "tests/miam_sujet.s";/* argv[argc-1] */;
 
 

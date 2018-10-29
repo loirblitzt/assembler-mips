@@ -23,7 +23,7 @@ STATE updateState(char c,STATE fsm){
 				return attFinCom;
 			break;
 			case '.': 
-				return POINT; /* à discuter */
+				return attFinDirective; /* à discuter */
 			break;
 			case '(':
 				return PARENTHESEG;
@@ -46,11 +46,14 @@ STATE updateState(char c,STATE fsm){
 			case '-':
 				return attNombre;
 			break;
+			case '$':
+				return attFinReg;
+			break;
 			default:
 				if(isdigit(c)){
 					return nombre;
 				}
-				else if((c=='_') || isalpha(c)||c=='$'){
+				else if((c=='_') || isalpha(c)/* ||c=='$' */){
 					return attFinSymb;
 				}
 				else{
@@ -58,6 +61,22 @@ STATE updateState(char c,STATE fsm){
 					printf ("\033[31m ERROR or lexeme not implemented yet\033[0m\n");
 				}
 			break;
+		}
+	break;
+	case attFinReg:
+		if(isblank(c) || c == '\0'){
+			return REGISTRE;
+		}
+		else{
+			return attFinReg;
+		}
+	break;
+	case attFinDirective:
+		if (isblank(c) || c == '\0'){
+			return DIRECTIVE;
+		}
+		else{
+			return attFinDirective;
 		}
 	break;
 	case attFinCom :

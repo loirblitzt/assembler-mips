@@ -21,7 +21,8 @@ enum _type {
     etiquette,
     directive,
     parenthesed,
-    parentheseg
+    parentheseg,
+    registre
 };
 typedef enum _type TYPE;
 

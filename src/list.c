@@ -81,7 +81,7 @@ size_t sizeFromType(TYPE t, void* data,char realType){
 	return 0; 
 }
 
-char* stringType[13] = {
+char* stringType[] = {
 	"commentaire",
 	"symb",
     "hexa",
@@ -94,7 +94,8 @@ char* stringType[13] = {
     "etiquette",
     "directive",
 	"parenthese de droite",
-	"parenthese de gauche"
+	"parenthese de gauche",
+	"registre"
 };
 void printType(LIST l){
 	/* if (l->type > parentheseg){
