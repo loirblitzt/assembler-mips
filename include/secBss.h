@@ -1,0 +1,6 @@
+/*
+	secBss.h
+	
+	sec comme section
+meme chose que datasec .h mais du COUP VA PEUT ETRE ETRE INUTIL EST ON VA JUSTE UTILISER SECDATA.H
+*/

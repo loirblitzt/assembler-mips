@@ -1,0 +1,5 @@
+*as_mips
+*.dbg
+*.pdf
+ut_*.exe
+.vscode/*
