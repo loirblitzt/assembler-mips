@@ -1,12 +1,11 @@
 /* this code has the same conventions and working logic than
 lex.c */
 
-#include "list.h"
-#include "fsmG1.h"
+#include "gram1.h"
 
 /* identificate an element and its collection */
-char getNextTokenG1(LISTE lex){
-    LISTE tmp = createList();
+char getNextTokenG1(LIST lex){
+    LIST tmp = createList();
     /* enum to indicate in which section we are */
 
     /* boucle debut : trouve le premier element
@@ -22,6 +21,8 @@ char getNextTokenG1(LISTE lex){
     return 0;
 }
 
-void G1LoadLex(LISTE lex/* ,other collections to be returned to main */){
-    while(getNextTokenG1(lex/*, other shit  */))
+void G1LoadLex(LIST lex/* ,other collections to be returned to main */){
+    while(getNextTokenG1(lex/*, other shit  */)){
+
+    }
 }
