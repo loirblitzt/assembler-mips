@@ -66,4 +66,5 @@ archive :
 testlist :
 	$(LD) $^ $(UT_LIST) $(LFLAGS) $(CFLAGS_DBG) -o builds/ut_list.exe
 run :
-	./$(TARGET)	faketext | less
+	./$(TARGET)	faketext #| less
+#$(filter-out $@,$(MAKECMDGOALS))

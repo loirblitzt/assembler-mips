@@ -53,14 +53,14 @@ int main ( int argc, char *argv[] ) {
        puis la sortie du programme avec un code erreur non nul (EXIT_FAILURE) */
     /* ERROR_MSG("Erreur. Arret du programme"); */
 
-
+/* 
     if ( argc <2 ) {
         print_usage(argv[0]);
         exit( EXIT_FAILURE );
     }
-
+ */
     /* used to choose the file to be compiled */
-    file  	= "tests/miam_sujet.s";/* argv[argc-1] */;
+    file  	= "tests/testG1data.txt";/* argv[argc-1] */;
 
 
     if ( NULL == file ) {
@@ -73,9 +73,9 @@ int main ( int argc, char *argv[] ) {
     /* ---------------- do the lexical analysis -------------------*/
     lex_load_file( file, &nlines, &lex );
     DEBUG_MSG("source code got %d lines",nlines);
-    printAllData(lex);
+   /*  printAllData(lex); */
     /*-------------------grammar 1 analysis------------------------*/
-    /* G1LoadLex(lex); */
+    G1LoadLex(lex);
     
     
     /* ---------------- Free memory and terminate -------------------*/

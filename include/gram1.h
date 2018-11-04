@@ -8,8 +8,9 @@ _sortir ce quil faut mettre dans une collection
 */
 #include "list.h"
 #include "fsmG1.h"
+#include "secData.h"
 /*appelle la fsmG1 toussa*/
-char getNextTokenG1(LIST lex);
+LIST getNextTokenG1(LIST lex,LIST curLex,SECTION* sec);
 
 /*appelle getNextTokenG1*/
 void G1LoadLex(LIST lex);

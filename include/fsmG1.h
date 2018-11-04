@@ -10,12 +10,14 @@ updatefsmG1state
 
 gere .bss .data .text en me temps mais check apres coup si cest valide
 */
+#include "list.h"
 
 enum _stateg1{
 	init
 };
 typedef enum _stateg1 STATEG1;
-char condStartG1();
+
+char condStartG1(LIST * lex, LIST nullLex);
 
 char condEndG1();
 

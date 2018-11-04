@@ -1,0 +1,8 @@
+#test de l'automate de la section .data ce commentaitre doit être saute
+#test
+.set noreorder
+#.set doit etre ignore
+
+.data
+    .space 10
+#doit detecter que lon se trouve dans .data
