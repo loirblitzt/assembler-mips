@@ -4,5 +4,5 @@
 #.set doit etre ignore
 
 .data
-    .space 10
+    .space 10 , 20 ,30
 #doit detecter que lon se trouve dans .data

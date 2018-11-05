@@ -13,7 +13,7 @@
 #include <notify.h>
 #include <lex.h>
 #include "list.h"
-
+#include "gram1.h"
 /**
  * @param exec Name of executable.
  * @return Nothing.
@@ -39,6 +39,9 @@ int main ( int argc, char *argv[] ) {
     unsigned int 	nlines 	= 0;
     char         	 *file 	= NULL;
     LIST lex = createList();
+    COLG col;
+    col.data=createDataCol();col.bss=createDataCol();col.text=createDataCol();
+    col.data.sec=data;col.bss.sec=bss;col.text.sec=text;
     /* exemples d'utilisation des macros du fichier notify.h */
     /* WARNING_MSG : sera toujours affiche */
     WARNING_MSG("Un message WARNING_MSG !");
@@ -73,13 +76,15 @@ int main ( int argc, char *argv[] ) {
     /* ---------------- do the lexical analysis -------------------*/
     lex_load_file( file, &nlines, &lex );
     DEBUG_MSG("source code got %d lines",nlines);
-   /*  printAllData(lex); */
+    printAllData(lex);
     /*-------------------grammar 1 analysis------------------------*/
-    G1LoadLex(lex);
-    
+    G1LoadLex(lex,&col);
+    printColG(col.data);
+    printColG(col.bss);
     
     /* ---------------- Free memory and terminate -------------------*/
     freeAllElements(lex);
+    freeColG(col.data);freeColG(col.text);freeColG(col.bss);
 
     exit( EXIT_SUCCESS );
 }

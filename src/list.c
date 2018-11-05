@@ -5,7 +5,6 @@ LIST createList(){
 }
 
 
-/* using technique  from : https://www.geeksforgeeks.org/generic-linked-list-in-c-2/ */
 LIST addToList (LIST l, void* data , TYPE t, int line,char realType, char headTail){
     LIST a = (LIST)malloc(sizeof(*l));
 	
