@@ -10,6 +10,8 @@ en soit cest juste une liste
 #define _secdata_h_
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 enum _typeG1{
 	intG,

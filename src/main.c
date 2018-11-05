@@ -42,6 +42,10 @@ int main ( int argc, char *argv[] ) {
     COLG col;
     col.data=createDataCol();col.bss=createDataCol();col.text=createDataCol();
     col.data.sec=data;col.bss.sec=bss;col.text.sec=text;
+
+    int sizeDico;
+    INSTR * dico = loadDico("tests/simpledico.dico",&sizeDico);
+
     /* exemples d'utilisation des macros du fichier notify.h */
     /* WARNING_MSG : sera toujours affiche */
     WARNING_MSG("Un message WARNING_MSG !");
@@ -81,10 +85,15 @@ int main ( int argc, char *argv[] ) {
     G1LoadLex(lex,&col);
     printColG(col.data);
     printColG(col.bss);
-    
-    /* ---------------- Free memory and terminate -------------------*/
+
+    /* test pour le dico
+    printf("sizedico : %d\n", sizeDico);
+    printf("%d\n",searchDico("ADD",dico,sizeDico));
+ */
+    /* ---------------- Free memory and terminate------------------*/
     freeAllElements(lex);
     freeColG(col.data);freeColG(col.text);freeColG(col.bss);
+    freeDico(dico,sizeDico);
 
     exit( EXIT_SUCCESS );
 }

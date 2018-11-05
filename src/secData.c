@@ -10,7 +10,15 @@ void addHeadG(DATACOL * col, DATAG data, TYPEG1 type, int offset, int nbline){
     DATALIST tmpl = (DATALIST)malloc(sizeof(*tmpl));
 
     tmpl->type= type; tmpl->offset = offset; tmpl->nbLine = nbline;
-    tmpl->data = data; /* halla waka bah */
+    if (type == symbG){
+        /* hazardous work ahead */
+        (tmpl->data).asciiz = (char*)calloc(strlen(data.asciiz)-1,sizeof(char));
+        (tmpl->data).asciiz =strncpy((tmpl->data).asciiz,data.asciiz+1,strlen(data.asciiz)-2);
+        (tmpl->data).asciiz[strlen(data.asciiz)-1] = '\0' ;
+    }
+    else{
+        tmpl->data = data; /* halla waka bah */
+    }
 
     if(col->l == NULL){
         tmpl->suiv = tmpl;
@@ -30,10 +38,10 @@ void printElementG(DATALIST l){
             printf("type : int\ndata : %d\n",(l->data).word);
         break;
         case uintG:
-            printf("type : int\ndata : %d\n",(l->data).space);
+            printf("type : uint\ndata : %d\n",(l->data).space);
         break;
         case charG:
-            printf("type : int\ndata : %d\n",(l->data).byte);
+            printf("type : char\ndata : %d\n",(l->data).byte);
         break;
         case symbG:
             printf("type : string\ndata : %s\n",(l->data).asciiz);
@@ -65,6 +73,9 @@ void printColG(DATACOL col){
 /*suppression*/
 
 void freeElementG(DATALIST l){
+    if (l->type == symbG){
+        free((l->data).asciiz);
+    }
     free(l);
 }
 

@@ -15,6 +15,7 @@ gere .bss .data .text en me temps mais check apres coup si cest valide
 
 #include "list.h"
 #include "secData.h"
+#include "dicoG1.h"
 /* la data colection qui enclobe tout */
 struct _globCol{
     DATACOL data;
@@ -37,6 +38,9 @@ enum _stateg1{
 	BSS,
 	DATA,
 	SPACE,
+	ASCIIZ,
+	BYTE,
+	WORD,
 	error
 };
 typedef enum _stateg1 STATEG1;

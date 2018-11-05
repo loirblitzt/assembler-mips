@@ -1,0 +1,5 @@
+4
+ADD R 3
+ADDI I 3
+LW I 2
+NOP P 0

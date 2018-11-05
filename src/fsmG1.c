@@ -66,16 +66,74 @@ STATEG1 updateSTATEG1(LIST lex,STATEG1 state,SECTION* psec,COLG * pcol){
                 break;
             }
         break;
+        /* package */
+        case attArgByte:
+            if (lex->type == decimal /* || lex->type == hexa */){
+                char d = strtol(lex->data,NULL,0);
+                if(*psec == data){
+                    /* words begin w/ offset%4 == 0*/
+                    (pcol->data).currentOffset += 1;
+                    addHeadG(&(pcol->data),(DATAG)d,charG,(pcol->data).currentOffset,lex->line);
+                }
+                else {return error;}
+                return attFinByte;
+            }
+            else{ return error;}
+        break;
+        case attFinByte:
+            if (lex->type == retourLine) return BYTE;
+            else if (lex->type == virgule) return attArgByte;
+            else if (lex->type == commentaire) return attFinByte;
+            else{return error;}
+        break;
+        /* package */
+        case attArgWord:
+            if (lex->type == decimal /* || lex->type == hexa */){
+                int d = strtol(lex->data,NULL,0);
+                if(*psec == data){
+                    /* words begin w/ offset%4 == 0*/
+                    int modulo = (pcol->data).currentOffset%4;
+                    (pcol->data).currentOffset += ((4-modulo)%4)+4;/* magic formula */
+                    addHeadG(&(pcol->data),(DATAG)d,intG,(pcol->data).currentOffset,lex->line);
+                }
+                else {return error;}
+                return attFinWord;
+            }
+            else{ return error;}
+        break;
+        case attFinWord:
+            if (lex->type == retourLine) return WORD;
+            else if (lex->type == virgule) return attArgWord;
+            else if (lex->type == commentaire) return attFinWord;
+            else{return error;}
+        break;
+        /* package */
+        case attArgAsciiz:
+            if(lex->type == string && *psec == data){
+                    (pcol->data).currentOffset += strlen(lex->data)+1; /* le \0 est ajouté par addHeadG */
+                    addHeadG(&(pcol->data),(DATAG)((char*)(lex->data)),symbG,(pcol->data).currentOffset,lex->line);
+                    return attFinAsciiz;
+            }
+        break;
+        case attFinAsciiz:
+            if (lex->type == retourLine) return ASCIIZ;
+            else if (lex->type == virgule) return attArgAsciiz;
+            else if (lex->type == commentaire) return attFinAsciiz;
+            else{return error;}
+        break;
+        /* package */
         case attArgSpace:
             if (lex->type == decimal /* || lex->type == hexa */){
-                /* package into data struct
-                can we expect a second argument? 
-                is hexa accepted ?*/
                 unsigned int d = strtol(lex->data,NULL,0);
-                (pcol->data).currentOffset += d;
                 if(*psec == data){
+                    (pcol->data).currentOffset += d;
                     addHeadG(&(pcol->data),(DATAG)d,uintG,(pcol->data).currentOffset,lex->line);
                 }
+                else if(*psec == bss){
+                    (pcol->bss).currentOffset += d;
+                    addHeadG(&(pcol->bss),(DATAG)d,uintG,(pcol->bss).currentOffset,lex->line);
+                }
+                else {return error;}
                 return attFinSpace;
             }
             else{ return error;}
@@ -83,6 +141,7 @@ STATEG1 updateSTATEG1(LIST lex,STATEG1 state,SECTION* psec,COLG * pcol){
         case attFinSpace:
             if (lex->type == retourLine) return SPACE;
             else if (lex->type == virgule) return attArgSpace;
+            else if (lex->type == commentaire) return attFinSpace;
             else{return error;}
         break;
     }
