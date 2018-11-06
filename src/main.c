@@ -40,8 +40,8 @@ int main ( int argc, char *argv[] ) {
     char         	 *file 	= NULL;
     LIST lex = createList();
     COLG col;
-    col.data=createDataCol();col.bss=createDataCol();col.text=createDataCol();
-    col.data.sec=data;col.bss.sec=bss;col.text.sec=text;
+    col.data=createDataCol();col.bss=createDataCol();col.text=createTextCol();
+    col.data.sec=data;col.bss.sec=bss;
 
     int sizeDico;
     INSTR * dico = loadDico("tests/simpledico.dico",&sizeDico);
@@ -82,9 +82,10 @@ int main ( int argc, char *argv[] ) {
     DEBUG_MSG("source code got %d lines",nlines);
     printAllData(lex);
     /*-------------------grammar 1 analysis------------------------*/
-    G1LoadLex(lex,&col);
+    G1LoadLex(lex,&col,dico);
     printColG(col.data);
     printColG(col.bss);
+    printColT(col.text,dico);
 
     /* test pour le dico
     printf("sizedico : %d\n", sizeDico);
@@ -92,7 +93,7 @@ int main ( int argc, char *argv[] ) {
  */
     /* ---------------- Free memory and terminate------------------*/
     freeAllElements(lex);
-    freeColG(col.data);freeColG(col.text);freeColG(col.bss);
+    freeColG(col.data);freeColT(col.text);freeColG(col.bss);
     freeDico(dico,sizeDico);
 
     exit( EXIT_SUCCESS );

@@ -15,12 +15,12 @@ gere .bss .data .text en me temps mais check apres coup si cest valide
 
 #include "list.h"
 #include "secData.h"
-#include "dicoG1.h"
+#include "secText.h"
 /* la data colection qui enclobe tout */
 struct _globCol{
     DATACOL data;
     DATACOL bss;
-    DATACOL text; /* possible par un astucieux bricolage ? */
+    TEXTCOL text; /* possible par un astucieux bricolage ? */
     /* reste ,la table de symb, text*/
 }; typedef struct _globCol COLG;
 
@@ -47,9 +47,9 @@ typedef enum _stateg1 STATEG1;
 
 char condStartG1(LIST * lex, LIST nullLex,COLG * pcol);
 
-char condEndG1(LIST lex, LIST nullLEx, SECTION* sec,STATEG1* pstate,COLG *pcol);
+char condEndG1(LIST lex, LIST nullLEx, SECTION* sec,STATEG1* pstate,COLG *pcol,INSTR * dico);
 
-STATEG1 updateSTATEG1(LIST lex,STATEG1 state, SECTION * psec,COLG * pcol);
+STATEG1 updateSTATEG1(LIST lex,STATEG1 state, SECTION * psec,COLG * pcol,INSTR * dico);
 
 char isFinalG1(STATEG1 state);
 

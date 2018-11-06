@@ -15,12 +15,12 @@ char condStartG1(LIST * lex,LIST nullLex,COLG * pcol){
 }
 
 /* same as fsm.c */
-char condEndG1(LIST lex, LIST nullLEx, SECTION* psec,STATEG1* pstate,COLG * pcol){
-    *pstate = updateSTATEG1(lex,*pstate,psec,pcol);
+char condEndG1(LIST lex, LIST nullLEx, SECTION* psec,STATEG1* pstate,COLG * pcol,INSTR * dico){
+    *pstate = updateSTATEG1(lex,*pstate,psec,pcol,dico);
     return !isFinalG1(*pstate);
 }
 
-STATEG1 updateSTATEG1(LIST lex,STATEG1 state,SECTION* psec,COLG * pcol){
+STATEG1 updateSTATEG1(LIST lex,STATEG1 state,SECTION* psec,COLG * pcol,INSTR * dico){
     /* if (isFinalG1(state)) return state; */
     /* if .text???? TODO */
     switch(state){
@@ -72,8 +72,8 @@ STATEG1 updateSTATEG1(LIST lex,STATEG1 state,SECTION* psec,COLG * pcol){
                 char d = strtol(lex->data,NULL,0);
                 if(*psec == data){
                     /* words begin w/ offset%4 == 0*/
-                    (pcol->data).currentOffset += 1;
                     addHeadG(&(pcol->data),(DATAG)d,charG,(pcol->data).currentOffset,lex->line);
+                    (pcol->data).currentOffset += 1;
                 }
                 else {return error;}
                 return attFinByte;
@@ -93,8 +93,10 @@ STATEG1 updateSTATEG1(LIST lex,STATEG1 state,SECTION* psec,COLG * pcol){
                 if(*psec == data){
                     /* words begin w/ offset%4 == 0*/
                     int modulo = (pcol->data).currentOffset%4;
-                    (pcol->data).currentOffset += ((4-modulo)%4)+4;/* magic formula */
+                    (pcol->data).currentOffset += ((4-modulo)%4);/* magic formula */
                     addHeadG(&(pcol->data),(DATAG)d,intG,(pcol->data).currentOffset,lex->line);
+                    (pcol->data).currentOffset += 4;
+
                 }
                 else {return error;}
                 return attFinWord;
@@ -110,8 +112,8 @@ STATEG1 updateSTATEG1(LIST lex,STATEG1 state,SECTION* psec,COLG * pcol){
         /* package */
         case attArgAsciiz:
             if(lex->type == string && *psec == data){
-                    (pcol->data).currentOffset += strlen(lex->data)+1; /* le \0 est ajouté par addHeadG */
                     addHeadG(&(pcol->data),(DATAG)((char*)(lex->data)),symbG,(pcol->data).currentOffset,lex->line);
+                    (pcol->data).currentOffset += strlen(lex->data)-1; /* le \0 est ajouté par addHeadG */
                     return attFinAsciiz;
             }
         break;
@@ -126,12 +128,12 @@ STATEG1 updateSTATEG1(LIST lex,STATEG1 state,SECTION* psec,COLG * pcol){
             if (lex->type == decimal /* || lex->type == hexa */){
                 unsigned int d = strtol(lex->data,NULL,0);
                 if(*psec == data){
-                    (pcol->data).currentOffset += d;
                     addHeadG(&(pcol->data),(DATAG)d,uintG,(pcol->data).currentOffset,lex->line);
+                    (pcol->data).currentOffset += d;
                 }
                 else if(*psec == bss){
-                    (pcol->bss).currentOffset += d;
                     addHeadG(&(pcol->bss),(DATAG)d,uintG,(pcol->bss).currentOffset,lex->line);
+                    (pcol->bss).currentOffset += d;
                 }
                 else {return error;}
                 return attFinSpace;

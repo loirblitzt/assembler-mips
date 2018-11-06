@@ -4,7 +4,7 @@ lex.c */
 #include "gram1.h"
 
 /* identificate an element and its collection */
-LIST getNextTokenG1(LIST lex,LIST currLex, SECTION* sec,COLG * pcol){
+LIST getNextTokenG1(LIST lex,LIST currLex, SECTION* sec,COLG * pcol,INSTR * dico){
     LIST tmp = currLex;
     STATEG1 state = initG;
     if (tmp == lex) return NULL; /* peut etre inutile */
@@ -16,7 +16,7 @@ LIST getNextTokenG1(LIST lex,LIST currLex, SECTION* sec,COLG * pcol){
         tmp = tmp -> suiv;
     }
     /* boucle fin */
-    while (condEndG1(tmp,lex,sec,&state,pcol)){
+    while (condEndG1(tmp,lex,sec,&state,pcol,dico)){
         if (tmp == lex){ printf("ERROR\n"); return NULL;}
         tmp = tmp -> suiv;
     }
@@ -29,13 +29,13 @@ LIST getNextTokenG1(LIST lex,LIST currLex, SECTION* sec,COLG * pcol){
 }
 
 /* restart (sort of) the fsmG1 when a final state is reach*/
-void G1LoadLex(LIST lex,COLG *pcol/* ,other collections to be returned to main */){
+void G1LoadLex(LIST lex,COLG *pcol,INSTR * dico/* ,other collections to be returned to main */){
     if (lex != NULL ){
         LIST currLex = lex->suiv;
         /* global info */
         SECTION currSection = none;
 
-        while((currLex = getNextTokenG1(lex,currLex, &currSection,pcol/*, other shit  */)) !=NULL ){
+        while((currLex = getNextTokenG1(lex,currLex, &currSection,pcol,dico/*, other shit  */)) !=NULL ){
             /* affiche  */
         }
     }

@@ -26,7 +26,7 @@ int searchDico(char* inst,INSTR * dico,int size){
     char isNotFound=1;
     while(i<size-1 || isNotFound){
         i++;
-        isNotFound = strcmp(inst,dico[i].name);
+        isNotFound = strcasecmp(inst,dico[i].name);
     }
     if (!isNotFound)return i;
     else {return -1;}
