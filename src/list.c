@@ -163,3 +163,19 @@ void freeAllElements(LIST l){
 		c = tmp;
 	}
 }
+
+/* checks if is the number is the begining of a 
+	number - ( - register - )
+	pattern */
+char isNumberOk(LIST l){
+	if (l == NULL) return 0;
+	if ((l->type == decimal || l->type == hexa)
+		&& l->suiv != NULL && (l->suiv)->type == parentheseg
+		&& (l->suiv->suiv) != NULL &&(l->suiv->suiv)->type == registre
+		&& l->suiv->suiv->suiv != NULL && l->suiv->suiv->suiv->type == parenthesed){
+			return 1;
+		}
+	else{
+		return 0;
+	}
+}

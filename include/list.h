@@ -53,6 +53,8 @@ void printType(LIST l);
 
 void printAllTypes(LIST l);
 
+char isNumberOk(LIST l);
+
 void printData(LIST l);
 
 void printAllData(LIST l);

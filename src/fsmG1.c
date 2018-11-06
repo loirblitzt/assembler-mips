@@ -15,14 +15,15 @@ char condStartG1(LIST * lex,LIST nullLex,COLG * pcol){
 }
 
 /* same as fsm.c */
-char condEndG1(LIST lex, LIST nullLEx, SECTION* psec,STATEG1* pstate,COLG * pcol,INSTR * dico){
-    *pstate = updateSTATEG1(lex,*pstate,psec,pcol,dico);
+char condEndG1(LIST lex, LIST nullLEx, SECTION* psec,STATEG1* pstate,COLG * pcol,INSTR * dico,int sizeDico){
+    *pstate = updateSTATEG1(lex,*pstate,psec,pcol,dico, sizeDico);
     return !isFinalG1(*pstate);
 }
 
-STATEG1 updateSTATEG1(LIST lex,STATEG1 state,SECTION* psec,COLG * pcol,INSTR * dico){
+STATEG1 updateSTATEG1(LIST lex,STATEG1 state,SECTION* psec,COLG * pcol,INSTR * dico,int sizeDico){
     /* if (isFinalG1(state)) return state; */
     /* if .text???? TODO */
+    int indiceDico;
     switch(state){
         case initG:
             /* gestion des directives de sectionnement , avant le switch sur la section*/
@@ -58,13 +59,42 @@ STATEG1 updateSTATEG1(LIST lex,STATEG1 state,SECTION* psec,COLG * pcol,INSTR * d
                         return attArgSpace;
                     }
                     else{
-                        /* ERROR */
+                        /* ERROR */return error;
                     }
                 break;
                 case text:
                     /* gestion pour la section text */
+                    /* here cannot be an etiquette because it is handled in condstart */
+                    indiceDico = searchDico(lex->data,dico,sizeDico); /* i is will become the indice of the instruction in dico */
+    /* package */   if(lex->type == symb && indiceDico>=0){
+                        addHeadText(&(pcol->text),indiceDico,lex->line,(char)dico[indiceDico].numOp,((pcol->text).currOffset),NULL,NULL,NULL);
+                        (pcol->text).currOffset += 4;
+                        return attArgText;
+                    }
                 break;
             }
+        break;
+        case attTextpd:
+        case attTextpg:
+        case attTextreg:
+            return (STATEG1)(state+1);
+        break;
+        case attArgText:
+            if(isNumberOk(lex) && addRegister(lex,pcol->text.l)){
+                return attTextpg;
+            }
+            else if ((lex->type==registre || lex->type==symb || lex->type==decimal || lex->type==hexa) && addRegister(lex,pcol->text.l)){
+                return attFinText;
+            }
+            else{
+                return error;
+            }    
+        break;
+        case attFinText:
+            if (lex->type == retourLine) return INSTRUCTION;
+            else if (lex->type == virgule) return attArgText;
+            else if (lex->type == commentaire) return attFinText;
+            else{return error;}
         break;
         /* package */
         case attArgByte:

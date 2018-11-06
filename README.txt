@@ -2,25 +2,47 @@ Le code fourni permet d'acquérir des chaînes de caractères d'un fichier et de
 
 Le répertoire est organisé ainsi : 
 .
-├── tests
-│   ├── miam.s
-|   └── simple_test.txt         *new 
-├── src             *modified
-│   ├── main.c
-│   ├── lex.c
-|   ├── list.c      *new
-|   └─ fsm.c        *new
-├── include
-│   ├── notify.h
-│   ├── lex.h
-│   ├── global.h
-|   ├── fsm.h       *new
-|   └── list.h      *new
+├── builds
+├── code_test
+│   └── ut_list.c
 ├── doc
-│   └── livrables
-├── README.txt      *modified
+├── Doxyfile
+├── include
+│   ├── dicoG1.h
+│   ├── fsmG1.h
+│   ├── fsm.h
+│   ├── global.h
+│   ├── gram1.h
+│   ├── hach.h
+│   ├── lex.h
+│   ├── list.h
+│   ├── notify.h
+│   ├── secData.h
+│   ├── secText.h
+│   ├── symb.h
+│   └── symbolManager.h
+├── Livrable1_SICOM_Vincent_Loibl_Lucien_Salmon.pdf
 ├── Makefile
-└── Doxyfile
+├── README.txt
+├── src
+│   ├── dicoG1.c
+│   ├── fsm.c
+│   ├── fsmG1.c
+│   ├── gram1.c
+│   ├── hach.c
+│   ├── lex.c
+│   ├── list.c
+│   ├── main.c
+│   ├── secData.c
+│   └── secText.c
+└── tests
+    ├── miam_sujet.s
+    ├── simpledico.dico
+    ├── simple_test.txt
+    ├── test1.c
+    └── testG1data.txt
+
+6 directories, 33 files
 
 - tests : contient les fichiers pour tester le programme 
 - src : qui contient le code C de votre interpréteur.      
@@ -35,10 +57,10 @@ Le répertoire est organisé ainsi :
 -un test de la structure de file circulaire
 $ make testlist
 $ ./ut_list.exe
--le test de la machine à etat et de l'analyse lexicale
+-le test de la machine à etat et de l'analyse lexicale et grammaire
 $ make debug
-$ ./as-mips FICHIER.S
-
+$ make run
+make run permet de lancer l'analyse pour le fichier testG1data.txt et simpledico.dico
 
 
 --- pour compiler le code en mode debug (il créé l'exécutable 'as-mips' qui affiche les traces)

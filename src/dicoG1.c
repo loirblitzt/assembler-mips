@@ -10,7 +10,7 @@ INSTR* loadDico(char * nameFile,int * pnbEl){
     INSTR * tab = (INSTR*)calloc(*pnbEl,sizeof(INSTR));
     int i;
     for (i=*pnbEl-1;i>=0;i--){
-        if(fscanf(f,"%s %c %c",tmpC,&(tab[i].type),&(tab[i].numOp))!=3){
+        if(fscanf(f,"%s %c %d",tmpC,&(tab[i].type),&(tab[i].numOp))!=3){
             free(tab);
             return NULL;
         }
@@ -24,7 +24,7 @@ INSTR* loadDico(char * nameFile,int * pnbEl){
 int searchDico(char* inst,INSTR * dico,int size){
     int i = -1;
     char isNotFound=1;
-    while(i<size-1 || isNotFound){
+    while(i<size-1 && isNotFound){
         i++;
         isNotFound = strcasecmp(inst,dico[i].name);
     }

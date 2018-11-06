@@ -21,7 +21,7 @@
  *
  */
 void print_usage( char *exec ) {
-    fprintf(stderr, "Usage: %s file.s\n",
+    fprintf(stderr, "Usage: %s file.s dico.dico\n",
             exec);
 }
 
@@ -38,13 +38,13 @@ int main ( int argc, char *argv[] ) {
 
     unsigned int 	nlines 	= 0;
     char         	 *file 	= NULL;
+    char *           namedico = NULL;
+    int sizeDico;
     LIST lex = createList();
     COLG col;
     col.data=createDataCol();col.bss=createDataCol();col.text=createTextCol();
     col.data.sec=data;col.bss.sec=bss;
 
-    int sizeDico;
-    INSTR * dico = loadDico("tests/simpledico.dico",&sizeDico);
 
     /* exemples d'utilisation des macros du fichier notify.h */
     /* WARNING_MSG : sera toujours affiche */
@@ -60,17 +60,19 @@ int main ( int argc, char *argv[] ) {
        puis la sortie du programme avec un code erreur non nul (EXIT_FAILURE) */
     /* ERROR_MSG("Erreur. Arret du programme"); */
 
-/* 
-    if ( argc <2 ) {
+
+    if ( argc <3 ) {
         print_usage(argv[0]);
         exit( EXIT_FAILURE );
     }
- */
+
     /* used to choose the file to be compiled */
-    file  	= "tests/testG1data.txt";/* argv[argc-1] */;
+    file  	= /* "tests/testG1data.txt"; */argv[argc-2];
+    namedico = argv[argc-1];
+    INSTR * dico = loadDico("tests/simpledico.dico",&sizeDico);
 
 
-    if ( NULL == file ) {
+    if ( NULL == file/*  || NULL == dico */) {
         fprintf( stderr, "Missing ASM source file, aborting.\n" );
         exit( EXIT_FAILURE );
     }
@@ -82,7 +84,7 @@ int main ( int argc, char *argv[] ) {
     DEBUG_MSG("source code got %d lines",nlines);
     printAllData(lex);
     /*-------------------grammar 1 analysis------------------------*/
-    G1LoadLex(lex,&col,dico);
+    G1LoadLex(lex,&col,dico,sizeDico);
     printColG(col.data);
     printColG(col.bss);
     printColT(col.text,dico);

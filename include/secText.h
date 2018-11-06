@@ -11,6 +11,7 @@ struct _textlist {
     int instr;/* indice dans dico */
     unsigned int line;
     char nbop;
+    int decalage;
     LIST op[3];/* bcause 3 arguemnts max */
     struct _textlist * suiv;
 }; typedef struct _textlist* TEXTLIST;
@@ -23,7 +24,10 @@ struct _textcol{
 TEXTCOL createTextCol();
 
 void addHeadText(TEXTCOL * col, int instr,unsigned int line,
-                char nbop,LIST op1,LIST op2,LIST op3);
+                char nbop,int decalage,LIST op1,LIST op2,LIST op3);
+
+/* returns 1 for sucess */
+char addRegister(LIST lex,TEXTLIST l);
 
 void printElT(TEXTLIST l, INSTR * dico);
 

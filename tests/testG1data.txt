@@ -13,3 +13,6 @@
     .asciiz "salut" ,"\"vous\"" #gestion des \" ou pas
     .word 45 #on remarquera que le decalge ici est de 52 et non de 45 (alignement sur 4oct)
     .byte 12 ,23
+.text
+    ADD $1,$1
+    ADDI $2,$34

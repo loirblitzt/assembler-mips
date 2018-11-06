@@ -64,7 +64,7 @@ STATE updateState(char c,STATE fsm){
 		}
 	break;
 	case attFinReg:
-		if(isblank(c) || c == '\0'){
+		if(isblank(c) || c == '\0'|| c==','){
 			return REGISTRE;
 		}
 		else{

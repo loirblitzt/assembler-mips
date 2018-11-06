@@ -34,6 +34,11 @@ enum _stateg1{
 	attArgByte,
 	attArgAsciiz,
 	attArgWord,
+	attArgText,
+	attTextpg,
+	attTextreg,
+	attTextpd,
+	attFinText,
 	TEXT,
 	BSS,
 	DATA,
@@ -41,15 +46,16 @@ enum _stateg1{
 	ASCIIZ,
 	BYTE,
 	WORD,
+	INSTRUCTION,
 	error
 };
 typedef enum _stateg1 STATEG1;
 
 char condStartG1(LIST * lex, LIST nullLex,COLG * pcol);
 
-char condEndG1(LIST lex, LIST nullLEx, SECTION* sec,STATEG1* pstate,COLG *pcol,INSTR * dico);
+char condEndG1(LIST lex, LIST nullLEx, SECTION* sec,STATEG1* pstate,COLG *pcol,INSTR * dico,int sizeDico);
 
-STATEG1 updateSTATEG1(LIST lex,STATEG1 state, SECTION * psec,COLG * pcol,INSTR * dico);
+STATEG1 updateSTATEG1(LIST lex,STATEG1 state, SECTION * psec,COLG * pcol,INSTR * dico,int sizeDico);
 
 char isFinalG1(STATEG1 state);
 

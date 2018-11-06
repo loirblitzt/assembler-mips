@@ -10,9 +10,13 @@ INCDIR=include
 TESTDIR=testing
 DOCDIR=doc
 
+STRASM=tests/testG1data.txt
+STRDICO=tests/simpledico.dico
+
 #for unit testing these are the file that are to be compiled
 CODETESTDIR=code_test
 UT_LIST=$(SRCDIR)/list.c $(CODETESTDIR)/ut_list.c
+UT_HACH=$(SRCDIR)/hach.c $(CODETESTDIR)/test1.c
 
 GARBAGE=*~ $(SRCDIR)/*~ $(INCDIR)/*~ $(TESTDIR)/*~
 
@@ -65,6 +69,9 @@ archive :
 	cd .. && tar -czvf as-mips-`whoami`-`date +%d-%m-%H-%M`.tgz $(DIRNAME) && cd $(DIRNAME) 
 testlist :
 	$(LD) $^ $(UT_LIST) $(LFLAGS) $(CFLAGS_DBG) -o builds/ut_list.exe
+testhach :
+	$(LD) $^ $(UT_HACH) $(LFLAGS) $(CFLAGS_DBG) -o builds/ut_hach.exe
 run :
-	./$(TARGET)	faketext #| less
+	./$(TARGET)	$(STRASM) $(STRDICO)
+ #| less
 #$(filter-out $@,$(MAKECMDGOALS))

@@ -6,10 +6,10 @@ TEXTCOL createTextCol(){
     return col;
 }
 
-void addHeadText(TEXTCOL * col, int instr,unsigned int line,char nbop,LIST op1,LIST op2,LIST op3){
+void addHeadText(TEXTCOL * col, int instr,unsigned int line,char nbop,int decalage,LIST op1,LIST op2,LIST op3){
     TEXTLIST tmpl = (TEXTLIST)malloc(sizeof(*tmpl));
 
-    tmpl->instr = instr; tmpl->line = line; tmpl->nbop=nbop;
+    tmpl->instr = instr; tmpl->line = line; tmpl->nbop=nbop; tmpl->decalage=decalage;
     (tmpl->op)[0] = op1;(tmpl->op)[1] = op2;(tmpl->op)[2] = op3;
 
     if(col->l == NULL){
@@ -24,12 +24,12 @@ void addHeadText(TEXTCOL * col, int instr,unsigned int line,char nbop,LIST op1,L
 
 void printElT(TEXTLIST l,INSTR * dico){
     printf("---------------\n");
-    printf("instruction : %s\nligne : %d\nnombre doperandes : %d\n",dico[l->instr].name,
-            l->line,l->nbop);
+    printf("instruction : %s\nligne : %d\nnombre doperandes : %d\ndecalage : %d\n",dico[l->instr].name,
+            l->line,l->nbop,l->decalage);
     printf("----Opérandes : \n");
-    printData(l->op[0]);
-    printData(l->op[1]);
-    printData(l->op[2]);
+    if(l->op[0] != NULL)printData(l->op[0]);
+    if(l->op[1] != NULL)printData(l->op[1]);
+    if(l->op[2] != NULL)printData(l->op[2]);
     printf("---------------\n");
 }
 
@@ -60,4 +60,20 @@ void freeColT(TEXTCOL col){
             c=tmp;
         }
     }
+}
+
+char addRegister(LIST lex,TEXTLIST l){
+    if(l->op[0]==NULL){
+        l->op[0] = lex;
+        return 1;
+    }
+    else if (l->op[1]==NULL){
+        l->op[1] = lex;
+        return 1;
+    }
+    else if (l->op[2]==NULL){
+        l->op[2] = lex;
+        return 1;
+    }
+    return 0;
 }
