@@ -61,6 +61,8 @@ $ ./ut_list.exe
 $ make debug
 $ make run
 make run permet de lancer l'analyse pour le fichier testG1data.txt et simpledico.dico
+-Un test de la table de hachage est disponible
+make testhach
 
 
 --- pour compiler le code en mode debug (il créé l'exécutable 'as-mips' qui affiche les traces)

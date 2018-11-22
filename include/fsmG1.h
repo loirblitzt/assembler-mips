@@ -16,6 +16,7 @@ gere .bss .data .text en me temps mais check apres coup si cest valide
 #include "list.h"
 #include "secData.h"
 #include "secText.h"
+#include "symb.h"
 /* la data colection qui enclobe tout */
 struct _globCol{
     DATACOL data;
@@ -51,11 +52,11 @@ enum _stateg1{
 };
 typedef enum _stateg1 STATEG1;
 
-char condStartG1(LIST * lex, LIST nullLex,COLG * pcol);
+char condStartG1(LIST * lex, LIST nullLex,COLG * pcol,LISTH * pendingEtiq,STATEG1* pstate);
 
-char condEndG1(LIST lex, LIST nullLEx, SECTION* sec,STATEG1* pstate,COLG *pcol,INSTR * dico,int sizeDico);
+char condEndG1(LIST lex, LIST nullLEx, SECTION* sec,STATEG1* pstate,COLG *pcol,INSTR * dico,int sizeDico,LISTH * pendingEtiq,LISTH * TAB);
 
-STATEG1 updateSTATEG1(LIST lex,STATEG1 state, SECTION * psec,COLG * pcol,INSTR * dico,int sizeDico);
+STATEG1 updateSTATEG1(LIST lex,STATEG1 state, SECTION * psec,COLG * pcol,INSTR * dico,int sizeDico,LISTH * pendingEtiq,LISTH * TAB);
 
 char isFinalG1(STATEG1 state);
 

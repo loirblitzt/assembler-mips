@@ -45,6 +45,7 @@ int main ( int argc, char *argv[] ) {
     col.data=createDataCol();col.bss=createDataCol();col.text=createTextCol();
     col.data.sec=data;col.bss.sec=bss;
 
+    LISTH * TAB=calloc(N,sizeof(LISTH));
 
     /* exemples d'utilisation des macros du fichier notify.h */
     /* WARNING_MSG : sera toujours affiche */
@@ -61,13 +62,13 @@ int main ( int argc, char *argv[] ) {
     /* ERROR_MSG("Erreur. Arret du programme"); */
 
 
-    if ( argc <3 ) {
+    /* if ( argc <3 ) {
         print_usage(argv[0]);
         exit( EXIT_FAILURE );
-    }
+    } */
 
     /* used to choose the file to be compiled */
-    file  	= /* "tests/testG1data.txt"; */argv[argc-2];
+    file  	= "tests/testG1data.txt";/* argv[argc-2]; */
     namedico = argv[argc-1];
     INSTR * dico = loadDico("tests/simpledico.dico",&sizeDico);
 
@@ -84,11 +85,11 @@ int main ( int argc, char *argv[] ) {
     DEBUG_MSG("source code got %d lines",nlines);
     printAllData(lex);
     /*-------------------grammar 1 analysis------------------------*/
-    G1LoadLex(lex,&col,dico,sizeDico);
+    G1LoadLex(lex,&col,dico,sizeDico,TAB);
     printColG(col.data);
     printColG(col.bss);
     printColT(col.text,dico);
-
+    printTab(TAB);
     /* test pour le dico
     printf("sizedico : %d\n", sizeDico);
     printf("%d\n",searchDico("ADD",dico,sizeDico));
@@ -97,7 +98,7 @@ int main ( int argc, char *argv[] ) {
     freeAllElements(lex);
     freeColG(col.data);freeColT(col.text);freeColG(col.bss);
     freeDico(dico,sizeDico);
-
+    suppTab(TAB,N);
     exit( EXIT_SUCCESS );
 }
 

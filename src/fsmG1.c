@@ -2,7 +2,7 @@
 
 #include "fsmG1.h"
 
-char condStartG1(LIST * lex,LIST nullLex,COLG * pcol){
+char condStartG1(LIST * lex,LIST nullLex,COLG * pcol,LISTH * pendingEtiq,STATEG1* pstate){
     if((*lex)->type == commentaire ||(*lex)->type == retourLine )return 1;
     if ((*lex)->type == directive && (strcmp((*lex)->data,".set")==0)){
         *lex = (*lex)->suiv;
@@ -11,18 +11,28 @@ char condStartG1(LIST * lex,LIST nullLex,COLG * pcol){
             return 1;
         }
     }
+    if ((*lex)->type == symb){
+        LIST l = *lex;
+        if((*lex)->suiv == nullLex) return 1;
+        if(((*lex)->suiv)->type == deuxPoints){
+            *lex = (*lex)->suiv;
+            /* register l as a etiquette*/
+            if(addToPending(pendingEtiq,(char *)(l->data))==0){
+                *pstate = error;
+            }
+            return 1;/* continue the loop */
+        }
+    }
     return 0; /* end the loop */
 }
 
 /* same as fsm.c */
-char condEndG1(LIST lex, LIST nullLEx, SECTION* psec,STATEG1* pstate,COLG * pcol,INSTR * dico,int sizeDico){
-    *pstate = updateSTATEG1(lex,*pstate,psec,pcol,dico, sizeDico);
+char condEndG1(LIST lex, LIST nullLEx, SECTION* psec,STATEG1* pstate,COLG * pcol,INSTR * dico,int sizeDico,LISTH * pendingEtiq,LISTH * TAB){
+    *pstate = updateSTATEG1(lex,*pstate,psec,pcol,dico, sizeDico,pendingEtiq,TAB);
     return !isFinalG1(*pstate);
 }
 
-STATEG1 updateSTATEG1(LIST lex,STATEG1 state,SECTION* psec,COLG * pcol,INSTR * dico,int sizeDico){
-    /* if (isFinalG1(state)) return state; */
-    /* if .text???? TODO */
+STATEG1 updateSTATEG1(LIST lex,STATEG1 state,SECTION* psec,COLG * pcol,INSTR * dico,int sizeDico,LISTH * pendingEtiq,LISTH * TAB){
     int indiceDico;
     switch(state){
         case initG:
@@ -67,9 +77,13 @@ STATEG1 updateSTATEG1(LIST lex,STATEG1 state,SECTION* psec,COLG * pcol,INSTR * d
                     /* here cannot be an etiquette because it is handled in condstart */
                     indiceDico = searchDico(lex->data,dico,sizeDico); /* i is will become the indice of the instruction in dico */
     /* package */   if(lex->type == symb && indiceDico>=0){
+                        if(packagePending(pendingEtiq,TAB,*psec,(pcol->text).currOffset)==0){return error;}
                         addHeadText(&(pcol->text),indiceDico,lex->line,(char)dico[indiceDico].numOp,((pcol->text).currOffset),NULL,NULL,NULL);
                         (pcol->text).currOffset += 4;
                         return attArgText;
+                    }
+                    else{
+                        return error;
                     }
                 break;
             }
@@ -102,6 +116,7 @@ STATEG1 updateSTATEG1(LIST lex,STATEG1 state,SECTION* psec,COLG * pcol,INSTR * d
                 char d = strtol(lex->data,NULL,0);
                 if(*psec == data){
                     /* words begin w/ offset%4 == 0*/
+                    if(packagePending(pendingEtiq,TAB,*psec,(pcol->data).currentOffset)==0){return error;}
                     addHeadG(&(pcol->data),(DATAG)d,charG,(pcol->data).currentOffset,lex->line);
                     (pcol->data).currentOffset += 1;
                 }
@@ -124,6 +139,7 @@ STATEG1 updateSTATEG1(LIST lex,STATEG1 state,SECTION* psec,COLG * pcol,INSTR * d
                     /* words begin w/ offset%4 == 0*/
                     int modulo = (pcol->data).currentOffset%4;
                     (pcol->data).currentOffset += ((4-modulo)%4);/* magic formula */
+                    if(packagePending(pendingEtiq,TAB,*psec,(pcol->data).currentOffset)==0){return error;}
                     addHeadG(&(pcol->data),(DATAG)d,intG,(pcol->data).currentOffset,lex->line);
                     (pcol->data).currentOffset += 4;
 
@@ -142,6 +158,7 @@ STATEG1 updateSTATEG1(LIST lex,STATEG1 state,SECTION* psec,COLG * pcol,INSTR * d
         /* package */
         case attArgAsciiz:
             if(lex->type == string && *psec == data){
+                    if(packagePending(pendingEtiq,TAB,*psec,(pcol->data).currentOffset)==0) return error;
                     addHeadG(&(pcol->data),(DATAG)((char*)(lex->data)),symbG,(pcol->data).currentOffset,lex->line);
                     (pcol->data).currentOffset += strlen(lex->data)-1; /* le \0 est ajouté par addHeadG */
                     return attFinAsciiz;
@@ -158,10 +175,12 @@ STATEG1 updateSTATEG1(LIST lex,STATEG1 state,SECTION* psec,COLG * pcol,INSTR * d
             if (lex->type == decimal /* || lex->type == hexa */){
                 unsigned int d = strtol(lex->data,NULL,0);
                 if(*psec == data){
+                    if(packagePending(pendingEtiq,TAB,*psec,(pcol->data).currentOffset)==0) return error;
                     addHeadG(&(pcol->data),(DATAG)d,uintG,(pcol->data).currentOffset,lex->line);
                     (pcol->data).currentOffset += d;
                 }
                 else if(*psec == bss){
+                    packagePending(pendingEtiq,TAB,*psec,(pcol->bss).currentOffset);
                     addHeadG(&(pcol->bss),(DATAG)d,uintG,(pcol->bss).currentOffset,lex->line);
                     (pcol->bss).currentOffset += d;
                 }
@@ -175,6 +194,9 @@ STATEG1 updateSTATEG1(LIST lex,STATEG1 state,SECTION* psec,COLG * pcol,INSTR * d
             else if (lex->type == virgule) return attArgSpace;
             else if (lex->type == commentaire) return attFinSpace;
             else{return error;}
+        break;
+        case error:
+            return error;
         break;
     }
 }

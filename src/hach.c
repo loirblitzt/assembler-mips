@@ -40,41 +40,81 @@ LISTH addToHead(char *source, SECTIONH new_section, int decal, LISTH L){
   new->section=new_section;
   new->decalage=decal;
   new->next=(L);
-  *L=*new;
-  return(L);
+  /* *L=*new; */
+  return(new); /* regarde l'erreur ici lucien ;) */
   }
 
 }
 
 
 
-void addToTab(char *c, SECTIONH sec, int deca, LISTH * TAB){
+char addToTab(char *c, SECTIONH sec, int deca, LISTH * TAB){
   int n=hachage(c);
-  TAB[n]=addToHead(c,sec,deca,TAB[n]);
+  LISTH l = seekSymbInList(c,TAB[n]);
+  if(l==NULL){
+    TAB[n]=addToHead(c,sec,deca,TAB[n]);
+  }
+  else if (l->section==nullH){
+    l->decalage=deca;
+    l->section = sec;
+  }
+  else{
+    return 0;
+  }
+  return 1;
 }
 
-/*void suppTab(LISTH l,LISTH L){
-  if (l->next==NULL){
-    free(l);
-  }
-  else {
-    int n=hachage(l->s);
-    *(L+n)=*(l->next);
-    free(l);
-  }
-}*/
-
-
-LISTH seekSymb(char *symbole, LISTH *TAB){
-  int n=hachage(symbole);
-  if(TAB[n]->next==NULL){
-    return(TAB[n]);
-  }
-  else {
-    LISTH a=TAB[n]->next;
-    while (strcmp(a->s , symbole)){
-      a=a->next;
+void libereListH(LISTH l){
+    if(l != NULL){
+        libereListH(l->next);
+        free(l->s);
+        free(l);
     }
-    return(a);
+}
+
+void suppTab(LISTH * tab,int taille){
+    int i;
+    for(i=0;i<taille;i++){
+        libereListH(tab[i]);
+    }
+    free(tab);
+}
+
+/* return NULL if not found */
+LISTH seekSymbInList(char *symbole, LISTH TAB){
+  LISTH a=TAB;
+  while (a!=NULL && strcmp(a->s , symbole)!=0){
+    a=a->next;
   }
+  return(a);
+}
+LISTH seekSymb(char * symb,LISTH * TAB){
+  return seekSymbInList(symb,TAB[hachage(symb)]);
+}
+
+char* mesgH[]={
+  "nullH",
+  "textH",
+  "dataH",
+  "bssH"
+};
+void printL(LISTH l){
+  LISTH p = l;
+  while(p!=NULL){
+    printf("\033[31m-_-_-__-_-_-_-__-_-\033[0m\n");
+    printf("name : %s\n",p->s);
+    printf("section : %s\n",mesgH[l->section]);
+    printf("offset : %d\n",p->decalage);
+    printf("\033[31m-_-_-__-_-_-_-__-_-\033[0m\n");
+    p=p->next;
+  }
+}
+void printTab(LISTH * TAB){
+  printf("\033[32m_--------------------\033[0m\n");
+  printf("affichage des etiquettes déclarés stockées\n");
+  int i;
+  for (i=0;i<N;i++){
+    printL(TAB[i]);
+  }
+  printf("\033[32m_--------------------\033[0m\n");
 }

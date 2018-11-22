@@ -8,19 +8,23 @@ ajout element
 suppresion
 
 */
+#ifndef _hach_
+#define _hach_
 #include <stdlib.h>
 #include <stdio.h>
 
-#define N 1000
+
+#define N 100
 
 
 int hachage(char *s);
 
-enum _section{
+enum _sectionH{
+  nullH,
   textH,
   dataH,
   bssH
-} ; typedef enum _section SECTIONH;
+} ; typedef enum _sectionH SECTIONH;
 
 struct _listh {
     char *s;
@@ -30,9 +34,13 @@ struct _listh {
 };
 typedef struct _listh* LISTH;
 
+LISTH seekSymbInList(char *symbole, LISTH TAB);
 LISTH addToHead(char *new_s, SECTIONH new_section, int decalage, LISTH L);
 
-void addToTab(char *c, SECTIONH sec, int deca, LISTH * TAB);
-LISTH seekSymb(char *symbole, LISTH *TAB);
-
-void suppTab(LISTH l, LISTH L);
+char addToTab(char *c, SECTIONH sec, int deca, LISTH * TAB);
+LISTH seekSymb(char * symb,LISTH * TAB);
+void printL(LISTH l);
+void printTab(LISTH * TAB);
+void libereListH(LISTH l);
+void suppTab(LISTH * tab,int taille);
+#endif
