@@ -68,8 +68,8 @@ void addHeadG(DATACOL * col, DATAG data,
 			TYPEG1 type, int offset, int nbline);
 
 /* affichage */
+void printSection(SECTION sec);
 void printElementG(DATALIST l);
-
 void printColG(DATACOL col);
 /*suppression*/
 

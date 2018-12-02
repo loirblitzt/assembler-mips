@@ -47,6 +47,8 @@ int main ( int argc, char *argv[] ) {
 
     LISTH * TAB=calloc(N,sizeof(LISTH));
 
+    RELOCLIST reloclist = NULL;
+
     /* exemples d'utilisation des macros du fichier notify.h */
     /* WARNING_MSG : sera toujours affiche */
     WARNING_MSG("Un message WARNING_MSG !");
@@ -85,11 +87,12 @@ int main ( int argc, char *argv[] ) {
     DEBUG_MSG("source code got %d lines",nlines);
     printAllData(lex);
     /*-------------------grammar 1 analysis------------------------*/
-    G1LoadLex(lex,&col,dico,sizeDico,TAB);
+    G1LoadLex(lex,&col,dico,sizeDico,TAB,&reloclist);
     printColG(col.data);
     printColG(col.bss);
     printColT(col.text,dico);
     printTab(TAB);
+    printAllElR(reloclist);
     /* test pour le dico
     printf("sizedico : %d\n", sizeDico);
     printf("%d\n",searchDico("ADD",dico,sizeDico));
@@ -99,6 +102,7 @@ int main ( int argc, char *argv[] ) {
     freeColG(col.data);freeColT(col.text);freeColG(col.bss);
     freeDico(dico,sizeDico);
     suppTab(TAB,N);
+    freeListR(reloclist);
     exit( EXIT_SUCCESS );
 }
 

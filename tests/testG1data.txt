@@ -14,5 +14,5 @@ a:    .space 34
     .word 45 #on remarquera que le decalge ici est de 52 et non de 45 (alignement sur 4oct)
     .byte 12 ,23
 .text
-    ADD $1,$3
-    ADDI $2,$34
+    ADDI $1,$3,a
+    ADDI $2,$3,Z

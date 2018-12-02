@@ -16,4 +16,5 @@ char packagePending(LISTH * pl,LISTH * TAB,SECTIONH sec,int offset){
     }
     libereListH(*pl);
     *pl =NULL;/* safe ? my answer : yes bc *pl as not been malloced*/
+    return 1;
 }

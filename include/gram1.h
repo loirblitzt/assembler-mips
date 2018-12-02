@@ -16,9 +16,9 @@ _sortir ce quil faut mettre dans une collection
 
 
 /*appelle la fsmG1 toussa*/
-LIST getNextTokenG1(LIST lex,LIST curLex,SECTION* sec, COLG * pcol,INSTR * dico,int sizeDico,LISTH * tmpEtiq,LISTH * TAB);
+LIST getNextTokenG1(LIST lex,LIST curLex,SECTION* sec, COLG * pcol,INSTR * dico,int sizeDico,LISTH * tmpEtiq,LISTH * TAB, RELOCLIST* reloclist);
 
 /*appelle getNextTokenG1*/
-void G1LoadLex(LIST lex,COLG * col,INSTR * dico,int sizeDico,LISTH * TAB);
+void G1LoadLex(LIST lex,COLG * col,INSTR * dico,int sizeDico,LISTH * TAB,RELOCLIST* reloclist);
 
 #endif
