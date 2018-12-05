@@ -95,6 +95,9 @@ STATEG1 updateSTATEG1(LIST lex,STATEG1 state,SECTION* psec,COLG * pcol,INSTR * d
             return (STATEG1)(state+1);
         break;
         case attArgText:
+            if (erreurInstruction(lex, pcol->text,dico,sizeDico)==0){
+              return error;
+            }
             if(isNumberOk(lex) && addRegister(lex,pcol->text.l)){
                 return attTextpg;
             }
@@ -116,7 +119,7 @@ STATEG1 updateSTATEG1(LIST lex,STATEG1 state,SECTION* psec,COLG * pcol,INSTR * d
             else{
                 printf("les opérandes ne sont pas ceux attendues ou ne sont pas séparés par des virgules\n");
                 return error;
-            }    
+            }
         break;
         case attFinText:
             if (lex->type == retourLine) return INSTRUCTION;
@@ -147,7 +150,7 @@ STATEG1 updateSTATEG1(LIST lex,STATEG1 state,SECTION* psec,COLG * pcol,INSTR * d
                     }
                 return attFinByte;
             }
-            else{ 
+            else{
                 printf("L'opérande de .byte doit être un nombre\n");
                 return error;
                 }
@@ -192,7 +195,7 @@ STATEG1 updateSTATEG1(LIST lex,STATEG1 state,SECTION* psec,COLG * pcol,INSTR * d
                 addHeadG(&(pcol->data),(DATAG)0,intG,(pcol->data).currentOffset,lex->line);
                 (pcol->data).currentOffset += 4;
             }
-            else{ 
+            else{
                 printf("L'opérande de .word doit être un nombre ou une étiquette, ce n'est pas le cas ici\n");
                 return error;
             }
@@ -254,7 +257,7 @@ STATEG1 updateSTATEG1(LIST lex,STATEG1 state,SECTION* psec,COLG * pcol,INSTR * d
                     }
                 return attFinSpace;
             }
-            else{ 
+            else{
                 printf("L'opérande de .space doit être un nombre, ce n'est pas le cas ici\n");
                 return error;}
         break;
