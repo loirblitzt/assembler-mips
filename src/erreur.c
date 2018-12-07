@@ -33,7 +33,7 @@ int erreurInstruction(LIST lex, TEXTCOL textc, INSTR * dico, int sizeDico){
 
   int indiceDico = textc.l->instr;
   long int val ;
-  if (lex->type == register){
+  if (lex->type == registre){
       val = strtol((lex->data)+1,NULL,0);
     }
   if(dico[indiceDico].type=='R'){
@@ -74,19 +74,23 @@ int erreurInstruction(LIST lex, TEXTCOL textc, INSTR * dico, int sizeDico){
         return(0);}
       }
 
-    else if(((textc.l->op)[0]=!NULL )|| ((textc.l->op)[1]=!NULL )&& (textc.l->op)[2]==NULL){
+    else if(((textc.l->op)[0]!=NULL )|| ((textc.l->op)[1]!=NULL )&& (textc.l->op)[2]==NULL){
       if (lex->type==hexa || lex->type==decimal){
 
         long int d = strtol(lex->data,NULL,0);
         if(d<-32768 || d>32767){
           printf("La valeur de l'immediate n'est pas valide \n");
           return(0);
-      }
-      else{return(1);}
+        }
+        else{return(1);}
 
-    }
+      }
+      else if( lex->type == symb){
+      /* manage etiqu */
+      }
     else{printf("L'immediate n'est pas du bon type");
-    return(0);}
+      return(0);
+    }
 
     }
   }
@@ -140,7 +144,7 @@ else if(dico[indiceDico].type=='B'){
   else{printf("Les opérandes portant sur les registres ne sont pas du bons types\n");
     return(0);}
   }
-  else if((textc.l->op)[0]=!NULL && (textc.l->op)[1]==NULL){
+  else if((textc.l->op)[0]!=NULL && (textc.l->op)[1]==NULL){
     /** gestion de l'oFFset?**/
   }
   else{printf("L'opérande n'est pas du bon type");

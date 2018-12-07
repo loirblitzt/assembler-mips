@@ -21,7 +21,7 @@ struct _reloclist {
     LISTH pHach;
     LIST lex;
     struct _reloclist * suiv;
-}; typedef struct _reloclist* RELOCLIST;
+}; typedef struct _reloclist* RELOCLIST; 
 
 RELOCLIST addHeadR(RELOCLIST l,SECTION sec, int offset, RELOCTYPE type, LISTH indHach,LIST lex);
 

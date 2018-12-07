@@ -5,13 +5,55 @@ DATACOL createDataCol(){
     return col ;
 }
 
+void cleanString(char* s,int size){
+    char * start, *end;
+    start = s;
+    end = start;
+    int i = 0;
+    while(i<size){
+        if(*end!='\\'){
+            *start=*end;
+            start +=1;
+            end +=1;
+            i++;
+        }
+        else{
+            end +=1;
+            i++;
+            if(i<size){
+                switch (*end){
+                    case 't':
+                        *start = '\t';
+                    break;
+                    case 'n':
+                        *start = '\n';
+                    break;
+                    case '\\':
+                        *start = '\\';
+                    break;
+                    case '\"':
+                        *start = '\"';
+                    break;
+                    /* others??? */
+                }
+                start +=1;
+                end +=1;
+                i++;
+            }
+        }
+    }
+    start +=1;
+    *start = '\0';
+}
+
 /*ajout*/
 void addHeadG(DATACOL * col, DATAG data, TYPEG1 type, int offset, int nbline){
     DATALIST tmpl = (DATALIST)malloc(sizeof(*tmpl));
 
     tmpl->type= type; tmpl->offset = offset; tmpl->nbLine = nbline;
     if (type == symbG){
-        /* hazardous work ahead */
+        /* hazardous work ahead : get rid of the " " at the end and beginning */
+        cleanString(data.asciiz+1,strlen(data.asciiz)-2);
         (tmpl->data).asciiz = (char*)calloc(strlen(data.asciiz)-1,sizeof(char));
         (tmpl->data).asciiz =strncpy((tmpl->data).asciiz,data.asciiz+1,strlen(data.asciiz)-2);
         (tmpl->data).asciiz[strlen(data.asciiz)-1] = '\0' ;
