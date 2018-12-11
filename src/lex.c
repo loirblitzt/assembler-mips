@@ -29,7 +29,7 @@
  * @brief This function get an input line, extracts a token from it and return the pointeur to the next place where the analysis should continue. 
  */
 
-/* note that MIPS assembly supports distinctions between lower and upper case*/ 
+/* MIPS assembly supports distinctions between lower and upper case*/ 
 char* getNextToken(char** token, char* current_line,LIST* lex,int nline) {
     char* start = current_line; 
     char* end=NULL; 

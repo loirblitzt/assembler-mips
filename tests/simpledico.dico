@@ -1,5 +1,8 @@
-4
+7
 ADD R 3
 ADDI I 3
 LW I 2
-NOP P 0
+SLL I 3
+SUB R 3
+BNE L 3
+SLT R 3

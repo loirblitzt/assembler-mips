@@ -1,6 +1,117 @@
 /* gere la fsm pour la grammaire 1 */
 
 #include "fsmG1.h"
+char* pseudo[]={
+    "NOP",
+    "MOVE",
+    "NEG",
+    "LI",
+    "BLT",
+    "LW",
+    "SW"
+};
+int isPseudoInstr(char* name){
+    int i = 7;
+    char isNotFound = 1;
+    while(i > 0 && isNotFound){
+        i--;
+        isNotFound = strcasecmp(name,pseudo[i]);
+    }
+    if (!isNotFound){return i;}
+    return -1;
+}
+char replaceInstr(LIST  lex,int indPInstr){
+    /* the arguments of the pseudo instruction are supposed to be legal, otherwise the error will be handle later */
+    LIST l = lex;
+    char* reg0 = "$0\0";
+    char* vir = ",\0";
+    switch(indPInstr){
+        case -1:
+            return 0; /* code for error */
+        break;
+        case 0: /* NOP */
+            free(l->data);
+            l->data = malloc((strlen("SLL"))*sizeof(char));
+	        memcpy((l -> data),"SLL",(strlen("SLL"))*sizeof(char));
+            l->type = symb;
+            l = addHead2(l,(char*)"$0",registre,lex->line,3);
+            l = addHead2(l,(char*)",",virgule,lex->line,2);
+            l = addHead2(l,(char*)"$0",registre,lex->line,3);
+            l = addHead2(l,(char*)",",virgule,lex->line,2);
+            l = addHead2(l,(char*)"0",decimal,lex->line,2);
+            l = addHead2(l,(char*)"\n",retourLine,lex->line,2);
+        break;
+        case 1: /* MOVE */
+            free(l->data);
+            l->data = malloc((strlen("ADD"))*sizeof(char));
+	        memcpy((l -> data),"ADD",(strlen("ADD"))*sizeof(char));
+            l->type = symb;
+            l = l->suiv;
+            if(l->type!= registre)return 0;
+            l = l->suiv;
+            if(l->type != virgule)return 0;
+            l = l->suiv;
+            if(l->type != registre)return 0;
+            l = addHead2(l,(char*)",",virgule,lex->line,2);
+            l = addHead2(l,"$0",registre,lex->line,3);            
+        break;
+        case 2:/* NEG */
+            free(l->data);
+            l->data = malloc((strlen("SUB"))*sizeof(char));
+	        memcpy((l -> data),"SUB",(strlen("SUB"))*sizeof(char));
+            l->type = symb;
+            l = l->suiv;
+            if(l->type!=registre)return 0;
+            l= l->suiv;
+            if(l->type != virgule)return 0;
+            l = addHead2(l,"$0",registre,lex->line,3);
+            l = addHead2(l,(char*)",",virgule,lex->line,2);
+            l = l->suiv;
+            if(l->type!=registre)return 0;
+        break;
+        case 3:/* LI */
+            free(l->data);
+            l->data = malloc((strlen("ADDI"))*sizeof(char));
+	        memcpy((l -> data),"ADDI",(strlen("ADDI"))*sizeof(char));
+            l->type = symb;
+            l = l->suiv;
+            if(l->type!=registre)return 0;
+            l= l->suiv;
+            if(l->type != virgule)return 0;
+            l = addHead2(l,"$0",registre,lex->line,3);
+            l = addHead2(l,(char*)",",virgule,lex->line,2);
+            l = l->suiv;
+            /* if(l->type!=registre)return 0;         */
+        break;
+        case 4:/* BLT */
+            free(l->data);
+            l->data = malloc((strlen("SLT"))*sizeof(char));
+	        memcpy((l -> data),"SLT",(strlen("SLT"))*sizeof(char));
+            l->type = symb;
+            l = addHead2(l,"$1",registre,lex->line,3);
+            l = addHead2(l,",",virgule,lex->line,2);
+            l = l->suiv;
+            if(l->type!=registre)return 0;
+            l= l->suiv;
+            if(l->type != virgule)return 0;
+            l = l->suiv;
+            if(l->type!=registre)return 0;
+            l = addHead2(l,"\n",retourLine,lex->line,2);
+            l = addHead2(l,"BNE",symb,lex->line,4);
+            l = addHead2(l,"$1",registre,lex->line,3);
+            l = addHead2(l,",",virgule,lex->line,2);
+            l = addHead2(l,"$0",registre,lex->line,3);
+        break;
+        /* HALL OF THE WORST TO IMPLEMENT */
+        case 5:/* LW */
+        
+        break;
+        case 6:/* SW */
+        
+        break;
+    }
+    return 1;
+}
 
 char condStartG1(LIST * lex,LIST nullLex,COLG * pcol,LISTH * pendingEtiq,STATEG1* pstate){
     if((*lex)->type == commentaire ||(*lex)->type == retourLine )return 1;
@@ -34,6 +145,7 @@ char condEndG1(LIST lex, LIST nullLEx, SECTION* psec,STATEG1* pstate,COLG * pcol
 
 STATEG1 updateSTATEG1(LIST lex,STATEG1 state,SECTION* psec,COLG * pcol,INSTR * dico,int sizeDico,LISTH * pendingEtiq,LISTH * TAB,RELOCLIST* reloclist){
     int indiceDico;
+    int indicePseudo;
     switch(state){
         case initG:
             /* gestion des directives de sectionnement , avant le switch sur la section*/
@@ -73,9 +185,14 @@ STATEG1 updateSTATEG1(LIST lex,STATEG1 state,SECTION* psec,COLG * pcol,INSTR * d
                     }
                 break;
                 case text:
+                    /* TODO: check si pseudo instruction et fonction remplace insert ce qu'il faut */
                     /* gestion pour la section text */
                     /* here cannot be an etiquette because it is handled in condstart */
-                    indiceDico = searchDico(lex->data,dico,sizeDico); /* i is will become the indice of the instruction in dico */
+                    indicePseudo =isPseudoInstr((char*)(lex->data));
+                    if(indicePseudo != -1){
+                        replaceInstr(lex,indicePseudo);
+                    }
+                    indiceDico = searchDico(lex->data,dico,sizeDico); /* i will become the indice of the instruction in dico */
     /* package */   if(lex->type == symb && indiceDico>=0){
                         if(packagePending(pendingEtiq,TAB,*psec,(pcol->text).currOffset)==0){return error;}
                         addHeadText(&(pcol->text),indiceDico,lex->line,(char)dico[indiceDico].numOp,((pcol->text).currOffset),NULL,NULL,NULL);
@@ -105,7 +222,7 @@ STATEG1 updateSTATEG1(LIST lex,STATEG1 state,SECTION* psec,COLG * pcol,INSTR * d
                 /* if symb push into relocLIST */
                 if(lex->type == symb){/* reloc type to be checked */
                     INSTR currInstr = dico[(pcol->text).l->instr];
-                    switch(currInstr.type){
+                    switch(currInstr.type){/* TODO: reloc pour LUI qui est I mais est tjr en <<16 */
                         case 'I': /* r mips lo16 really ? */
                             *reloclist = addHeadR(*reloclist,(SECTION)text,(pcol->text).currOffset-4,(RELOCTYPE)R_MIPS_LO16,seekSymb(/* (char*) */(lex->data),TAB),lex);
                         break;

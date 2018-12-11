@@ -172,7 +172,7 @@ else if(dico[indiceDico].type=='B'){
       if (lex->type==hexa || lex->type==decimal){
 
         long int d = strtol(lex->data,NULL,0);
-        if(d>-131071 || d<131070 || d%4!=0){/* a check */
+        if(d<-131071 || d>131070 || d%4!=0){/* a check */
           printf("La valeur du jump n'est pas valide \n");
           return(0);
       }

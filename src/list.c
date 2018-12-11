@@ -34,6 +34,27 @@ LIST addToList (LIST l, void* data , TYPE t, int line,char realType, char headTa
 LIST addHead(LIST l, void* data, TYPE t, int line,char realType){
 	return addToList(l,data,t,line,realType,0);
 }
+/* special fonction that specifie the size (taille) of a string */
+LIST addHead2(LIST l, void* data, TYPE t, int line,int taille){
+	LIST a = (LIST)malloc(sizeof(*l));
+	
+	/* initialization of the struct element */
+	a -> data = malloc(taille*sizeof(char));
+	memcpy((a -> data),data,taille*sizeof(char)); /* copy the data onto the struct */
+	((char*)(a->data))[taille-1]='\0';
+	if(l == NULL){
+		a-> suiv  = a;
+	}
+	else{
+		a -> suiv = l -> suiv;
+		l-> suiv = a;
+	}
+	a -> type = t;
+	a -> line = line;
+	a -> trueType = 0;
+
+	return a;
+}
 
 LIST addTail(LIST l, void* data, TYPE t, int line,char realType){
 	return addToList(l,data,t,line,realType,1);
@@ -51,7 +72,7 @@ LIST getElement(LIST l, int i){
 	return c;
 }
 
-/* TODO : maintenir cette fonction a chaque changement dans TYPE */
+/* maintenir cette fonction a chaque changement dans TYPE */
 size_t sizeFromType(TYPE t, void* data,char realType){
 	if(!realType){
 		return strlen((char*)data)*sizeof(char);
