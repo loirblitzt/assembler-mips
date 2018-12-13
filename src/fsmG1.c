@@ -248,7 +248,6 @@ STATEG1 updateSTATEG1(LIST lex,STATEG1 state,SECTION* psec,COLG * pcol,INSTR * d
                     }
                 break;
                 case text:
-                    /* TODO: check si pseudo instruction et fonction remplace insert ce qu'il faut */
                     /* gestion pour la section text */
                     /* here cannot be an etiquette because it is handled in condstart */
                     indicePseudo =isPseudoInstr((char*)(lex->data));
@@ -269,10 +268,12 @@ STATEG1 updateSTATEG1(LIST lex,STATEG1 state,SECTION* psec,COLG * pcol,INSTR * d
                 break;
             }
         break;
+        case attTextreg:
+            /* TODO: mettre registre dans les op */
+            if(addRegister(lex,pcol->text.l))return error;
         case attTextpd:
         case attTextpg:
-        case attTextreg:
-            return (STATEG1)(state+1);/* TODO: mettre registre dans les op */
+            return (STATEG1)(state+1);
         break;
         case attArgText:
             if (erreurInstruction(lex, pcol->text,dico,sizeDico)==0){

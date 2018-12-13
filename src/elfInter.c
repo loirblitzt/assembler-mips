@@ -56,16 +56,10 @@ int fakeMain(COLG col,RELOCLIST relocL,LIST m_strTab){
     symtab   = make_symtab_section( shstrtab, strtab, syms,2);
 
 
-    Elf32_Rel text_reloc[1];
-    text_reloc[0].r_offset =4;
-    text_reloc[0].r_info=ELF32_R_INFO(elf_get_sym_index_from_name(symtab, shstrtab, strtab,".text"),R_MIPS_LO16);
-    Elf32_Rel data_reloc[1];
-    data_reloc[0].r_offset =0;
-    data_reloc[0].r_info=ELF32_R_INFO(elf_get_sym_index_from_name(symtab, shstrtab,strtab,".bss"),R_MIPS_32);
-
-
-    reltext  = make_rel32_section( ".rel.text", text_reloc,1);
-    reldata  = make_rel32_section( ".rel.data", data_reloc,1);
+    struct relSection relColection;
+    relColection = makeStructReloc(relocL,strtab,shstrtab,sym_char);
+    reltext  = make_rel32_section( ".rel.text", relColection.sizeRelText,relColection.text);
+    reldata  = make_rel32_section( ".rel.data", relColection.sizeRelData,relColection.data);
 
 
     /*write these sections in file*/
@@ -88,6 +82,14 @@ int fakeMain(COLG col,RELOCLIST relocL,LIST m_strTab){
 
 
     /*clean up */
+    free(text_prog);
+    free(data_prog);
+    free(bss_prog);
+    free(sym_char);/* check valgrind for that */
+    free(syms);
+    free(relColection.data);
+    free(relColection.text);
+
     del_section(     text );
     del_section(     data );
     del_section(      bss );

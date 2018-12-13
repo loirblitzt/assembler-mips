@@ -133,6 +133,57 @@ Elf32_Sym* makeStructSym(RELOCLIST relocL, LIST m_strTab,section strtab,section 
     return res;
 }
 
-struct relSection makeStructReloc(){ /* pareil renvoie taille du bordel / voir aussi pour faire que data et que bss */
-
+struct relSection makeStructReloc(RELOCLIST relocL,section strtab,section shstrab,section symtab){ 
+    /* pareil renvoie taille du bordel / voir aussi pour faire que data et que bss */
+    /* what is the size ? */
+    struct relSection out ;
+    out.text = NULL; out.data = NULL;
+    out.sizeRelText = 0;out.sizeRelData = 0;
+    RELOCLIST l = relocL->suiv;
+    do{
+        if(l->sec == data)out.sizeRelData++;
+        else if(l->sec == text)out.sizeRelText++;
+        l = l->suiv;
+    }while(l != relocL->suiv);
+    /* allocation */
+    out.data = (Elf32_Rel*)calloc(out.sizeRelData,sizeof(Elf32_Rel));
+    out.text = (Elf32_Rel*)calloc(out.sizeRelText,sizeof(Elf32_Rel));
+    l = relocL->suiv;
+    int indText = 0;
+    int indData = 0;
+    do{/* already ordered */
+    /* can be cleaner */
+        if(l->sec == data){
+            out.data[indData].r_offset = l->offset;
+            switch(l->pHach->section){
+                case text:
+                    out.data[indData].r_info = ELF32_R_INFO(elf_get_sym_index_from_name(symtab,shstrab,strtab,".text"),l->relocType);
+                break;
+                case bss:
+                    out.data[indData].r_info = ELF32_R_INFO(elf_get_sym_index_from_name(symtab,shstrab,strtab,".bss"),l->relocType);
+                break;
+                case data:
+                    out.data[indData].r_info = ELF32_R_INFO(elf_get_sym_index_from_name(symtab,shstrab,strtab,".data"),l->relocType);
+                break;
+            }            
+            indData++;
+        }
+        else if(l->sec == text){
+            out.text[indText].r_offset = l->offset;
+            switch(l->pHach->section){
+                case text:
+                    out.text[indText].r_info = ELF32_R_INFO(elf_get_sym_index_from_name(symtab,shstrab,strtab,".text"),l->relocType);
+                break;
+                case bss:
+                    out.text[indText].r_info = ELF32_R_INFO(elf_get_sym_index_from_name(symtab,shstrab,strtab,".bss"),l->relocType);
+                break;
+                case data:
+                    out.text[indText].r_info = ELF32_R_INFO(elf_get_sym_index_from_name(symtab,shstrab,strtab,".data"),l->relocType);
+                break;
+            }
+            indText++;
+        }
+        l = l->suiv;
+    }while(l != relocL->suiv);
+    return out;
 }

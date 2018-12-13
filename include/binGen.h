@@ -32,9 +32,9 @@ union instrBin{
 };
 
 struct relSection{
-    Elf32_Rel text;
-    Elf32_Rel bss;
-    Elf32_Rel data;
+    Elf32_Rel * text;
+    Elf32_Rel * data;
+    int sizeRelText,sizeRelData;
 };
 
 void swap(union instrBin * a);
@@ -50,4 +50,4 @@ char** makeCharSym(LIST * m_strTab,RELOCLIST relocL,int * size);
 Elf32_Sym* makeStructSym(RELOCLIST relocL, LIST m_strTab,section strtab,
                         section shstrtab, int size); /* TODO: renvoyer taille du bordel  */
 
-struct relSection makeStructReloc(); /* pareil renvoie taille du bordel / voir aussi pour faire que data et que bss */
+struct relSection makeStructReloc(RELOCLIST relocL,section strtab,section shstrab,section symtab); /* pareil renvoie taille du bordel / voir aussi pour faire que data et que bss */
