@@ -13,7 +13,7 @@ _sortir ce quil faut mettre dans une collection
 
 #include "list.h"
 #include "fsmG1.h"
-
+#include "global.h"
 
 /*appelle la fsmG1 toussa*/
 LIST getNextTokenG1(LIST lex,LIST curLex,SECTION* sec, COLG * pcol,INSTR * dico,int sizeDico,LISTH * tmpEtiq,LISTH * TAB, RELOCLIST* reloclist,LIST * strTab);

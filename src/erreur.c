@@ -42,6 +42,7 @@ int erreurInstruction(LIST lex, TEXTCOL textc, INSTR * dico, int sizeDico){
     {
       if(val>32 || val<0){
         printf("La valeur d'un des registres n'est pas valide \n");
+        printf("a la ligne : %d\n",lex->line);
         return(0);
       }
       else{return(1);}
@@ -53,6 +54,7 @@ int erreurInstruction(LIST lex, TEXTCOL textc, INSTR * dico, int sizeDico){
     }
     else{
       printf("L'opérande n'est pas du bon type\n");
+      printf("a la ligne : %d\n",lex->line);
       return(0);
       }
   }
@@ -65,6 +67,7 @@ int erreurInstruction(LIST lex, TEXTCOL textc, INSTR * dico, int sizeDico){
 
           if(val>31 || val<0){
             printf("La valeur d'un des registres n'est pas valide \n");
+            printf("a la ligne : %d\n",lex->line);
             return(0);}
           else{return(1);}
 
@@ -73,6 +76,7 @@ int erreurInstruction(LIST lex, TEXTCOL textc, INSTR * dico, int sizeDico){
         else{return(1);} */
             }
       else{printf("Les opérandes portant sur les registres ne sont pas du bons types\n");
+        printf("a la ligne : %d\n",lex->line);
         return(0);}
       }
 
@@ -82,6 +86,7 @@ int erreurInstruction(LIST lex, TEXTCOL textc, INSTR * dico, int sizeDico){
         long int d = strtol(lex->data,NULL,0);
         if(d<-32768 || d>32767){
           printf("La valeur de l'immediate n'est pas valide \n");
+          printf("a la ligne : %d\n",lex->line);
           return(0);
         }
         else{return(1);}
@@ -91,6 +96,7 @@ int erreurInstruction(LIST lex, TEXTCOL textc, INSTR * dico, int sizeDico){
       /* manage etiqu */
       }
     else{printf("L'immediate n'est pas du bon type");
+      printf("a la ligne : %d\n",lex->line);
       return(0);
     }
     }
@@ -101,6 +107,7 @@ int erreurInstruction(LIST lex, TEXTCOL textc, INSTR * dico, int sizeDico){
 
         if(lex->data>31 || lex->data<0){
           printf("La valeur d'un des registres n'est pas valide \n");
+          printf("a la ligne : %d\n",lex->line);
           return(error);}
         else{return(1);}
 
@@ -109,6 +116,7 @@ int erreurInstruction(LIST lex, TEXTCOL textc, INSTR * dico, int sizeDico){
       else{return(1);} */
           }
     else{printf("Les opérandes portant sur les registres ne sont pas du bons types\n");
+      printf("a la ligne : %d\n",lex->line);
       return(error);}
     }
 
@@ -118,12 +126,14 @@ int erreurInstruction(LIST lex, TEXTCOL textc, INSTR * dico, int sizeDico){
       int d = strtol(lex->data,NULL,0);
       if(lex->data<-32768 || lex->data>32767){
         printf("La valeur de l'immediate n'est pas valide \n");
+        printf("a la ligne : %d\n",lex->line);
         return(error);
     }
     else{return(1);}
 
   }
   else{printf("L'immediate n'est pas du bon type");
+  printf("a la ligne : %d\n",lex->line);
   return(error);}
     }
 
@@ -138,6 +148,7 @@ int erreurInstruction(LIST lex, TEXTCOL textc, INSTR * dico, int sizeDico){
 
         if(val>31 || val<0){
           printf("La valeur d'un des registres n'est pas valide \n");
+          printf("a la ligne : %d\n",lex->line);
           return(0);}
           else{return(1);}
 
@@ -146,6 +157,7 @@ int erreurInstruction(LIST lex, TEXTCOL textc, INSTR * dico, int sizeDico){
       else{return(1);}*/
       }
     else{printf("Les opérandes portant sur les registres ne sont pas du bons types\n");
+      printf("a la ligne : %d\n",lex->line);
       return(0);}
     }
 
@@ -155,12 +167,14 @@ int erreurInstruction(LIST lex, TEXTCOL textc, INSTR * dico, int sizeDico){
       int d = strtol(lex->data,NULL,0);
       if(d<0 || d>31){
         printf("La valeur du décalage n'est pas valide \n");
+        printf("a la ligne : %d\n",lex->line);
         return(0);
     }
     else{return(1);}
 
   }
   else{printf("Le décalage n'est pas du bon type");
+  printf("a la ligne : %d\n",lex->line);
   return(0);}
 
   }
@@ -172,6 +186,7 @@ else if(dico[indiceDico].type=='B'){
 
       if(val>31 || val<0){
         printf("La valeur d'un des registres n'est pas valide \n");
+        printf("a la ligne : %d\n",lex->line);
         return(0);}
         else{return(1);}
 
@@ -180,12 +195,14 @@ else if(dico[indiceDico].type=='B'){
     else{return(1);} */
     }
   else{printf("Les opérandes portant sur les registres ne sont pas du bons types\n");
+  printf("a la ligne : %d\n",lex->line);
     return(0);}
   }
   else if((textc.l->op)[0]!=NULL && (textc.l->op)[1]==NULL){
     /** gestion de l'oFFset?**/
   }
   else{printf("L'opérande n'est pas du bon type");
+  printf("a la ligne : %d\n",lex->line);
   return 0;}
 }
 
@@ -196,6 +213,7 @@ else if(dico[indiceDico].type=='B'){
 
           if(val>31 || val<0){
             printf("La valeur d'un des registres n'est pas valide \n");
+            printf("a la ligne : %d\n",lex->line);
             return(0);}
             else{return(1);}
 
@@ -204,6 +222,7 @@ else if(dico[indiceDico].type=='B'){
         else{return(1);} */
       }
       else{printf("Les opérandes portant sur les registres ne sont pas du bons types\n");
+      printf("a la ligne : %d\n",lex->line);
         return(0);}
       }
 
@@ -213,12 +232,14 @@ else if(dico[indiceDico].type=='B'){
         long int d = strtol(lex->data,NULL,0);
         if(d<-131071 || d>131070 || d%4!=0){/* a check */
           printf("La valeur du jump n'est pas valide \n");
+          printf("a la ligne : %d\n",lex->line);
           return(0);
       }
       else{return(1);}
 
     }
     else{printf("Le jump n'est pas du bon type");
+    printf("a la ligne : %d\n",lex->line);
     return(0);}
 
     }
@@ -229,6 +250,7 @@ else if(dico[indiceDico].type=='B'){
 
         if(val>31 || val<0){
           printf("La valeur d'un des registres n'est pas valide \n");
+          printf("a la ligne : %d\n",lex->line);
           return(0);}
           else{return(1);}
 
@@ -237,6 +259,7 @@ else if(dico[indiceDico].type=='B'){
       else{return(1);} */
     }
     else{printf("Les opérandes portant sur les registres ne sont pas du bons types\n");
+    printf("a la ligne : %d\n",lex->line);
       return(0);}
     }
 
@@ -246,12 +269,14 @@ else if(dico[indiceDico].type=='B'){
       long int d = strtol(lex->data,NULL,0);
       if(d<-131071 || d>131070 || d%4!=0){/* a check */
         printf("La valeur du branchement n'est pas valide \n");
+        printf("a la ligne : %d\n",lex->line);
         return(0);
     }
     else{return(1);}
 
   }
   else{printf("Le branchement n'est pas du bon type");
+  printf("a la ligne : %d\n",lex->line);
   return(0);}
 
   }
@@ -265,6 +290,7 @@ else if(dico[indiceDico].type=='B'){
 
           if(val>31 || val<0){
             printf("La valeur d'un des registres n'est pas valide \n");
+            printf("a la ligne : %d\n",lex->line);
             return(0);}
             else{return(1);}
 
@@ -273,6 +299,7 @@ else if(dico[indiceDico].type=='B'){
          else{return(1);} */
       }
       else{printf("Les opérandes portant sur les registres ne sont pas du bons types\n");
+      printf("a la ligne : %d\n",lex->line);
         return(0);}
       }
 
@@ -282,6 +309,7 @@ else if(dico[indiceDico].type=='B'){
         long int d = strtol(lex->data,NULL,0);
         if(d<-134217728 || d>134217727|| d%4!=0){/* a check */
           printf("La valeur du jump n'est pas valide \n");
+          printf("a la ligne : %d\n",lex->line);
           return(0);
         }
       }
@@ -289,9 +317,11 @@ else if(dico[indiceDico].type=='B'){
 
     }
     else{printf("Le jump n'est pas du bon type");
+    printf("a la ligne : %d\n",lex->line);
     return(0);}
 
     }
     else{printf("Le type d'instruction n'est pas bon");
+    printf("a la ligne : %d\n",lex->line);
     return(0);}
 }

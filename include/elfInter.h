@@ -3,5 +3,5 @@
 #include "binGen.h"
 
 /* to replace the main used in the exemple */
-int fakeMain(COLG col,RELOCLIST relocL,LIST m_strTab);
+int fakeMain(COLG col,RELOCLIST relocL,LIST m_strTab,char*);
 

@@ -1,6 +1,6 @@
 #include "elfInter.h"
 
-int fakeMain(COLG col,RELOCLIST relocL,LIST m_strTab){
+int fakeMain(COLG col,RELOCLIST relocL,LIST m_strTab,char* nameOut){
 
     /* prepare sections*/
     section     text = NULL;
@@ -21,8 +21,8 @@ int fakeMain(COLG col,RELOCLIST relocL,LIST m_strTab){
     int * data_prog;    data_prog =  makeBinData(col,&sizeData);
     int bss_prog ;      bss_prog = (int)makeBinBss(col);
     char ** sym_char;   sym_char =  makeCharSym(m_strTab,relocL,&sizeChar);
-    char* machine = "mips";/* TODO:les faire passer par argument */
-    char* name = "exemple.o";
+    char* machine = "mips";
+    char* name = nameOut;
     /* pelf options */
     int noreorder =1;
 

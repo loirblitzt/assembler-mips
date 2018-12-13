@@ -64,6 +64,5 @@
  */
 #define FAILURE          1
 
-
 #endif /* _GLOBAL_H */
 

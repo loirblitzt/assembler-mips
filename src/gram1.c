@@ -22,7 +22,11 @@ LIST getNextTokenG1(LIST lex,LIST currLex, SECTION* sec,COLG * pcol,INSTR * dico
         tmp = tmp -> suiv;
     }
     /* check conformite & package */
-    if (state == error){printf("\033[31m:ERROR IN FSM:\033[0m\n");return NULL;}
+    if (state == error){
+        printf("\033[31m:ERROR IN FSM:\033[0m\n");
+        /* exit( EXIT_FAILURE ); */
+        return NULL;
+    }
     if (tmp != lex){
         return tmp->suiv; /* value to continue the reading of lex ,lex++*/
     }
