@@ -54,7 +54,7 @@ enum _stateg1{
 };
 typedef enum _stateg1 STATEG1;
 
-char condStartG1(LIST * lex, LIST nullLex,COLG * pcol,LISTH * pendingEtiq,STATEG1* pstate);
+char condStartG1(LIST * lex, LIST nullLex,COLG * pcol,LISTH * pendingEtiq,STATEG1* pstate,LIST * strTab);
 
 char condEndG1(LIST lex, LIST nullLEx, SECTION* sec,STATEG1* pstate,COLG *pcol,INSTR * dico,int sizeDico,LISTH * pendingEtiq,LISTH * TAB,RELOCLIST* reloclist);
 

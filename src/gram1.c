@@ -4,7 +4,7 @@ lex.c */
 #include "gram1.h"
 
 /* identificate an element and its collection */
-LIST getNextTokenG1(LIST lex,LIST currLex, SECTION* sec,COLG * pcol,INSTR * dico,int sizeDico, LISTH * tmpEtiq,LISTH * TAB,RELOCLIST* reloclist){
+LIST getNextTokenG1(LIST lex,LIST currLex, SECTION* sec,COLG * pcol,INSTR * dico,int sizeDico, LISTH * tmpEtiq,LISTH * TAB,RELOCLIST* reloclist,LIST * strTab){
     LIST tmp = currLex;
     STATEG1 state = initG;
     
@@ -12,7 +12,7 @@ LIST getNextTokenG1(LIST lex,LIST currLex, SECTION* sec,COLG * pcol,INSTR * dico
 
     /* boucle debut : trouve le premier element
     saute : retour ligne commentaire , et peut etre le .set noreoder gere les etiquettes */
-    while (condStartG1(&tmp,lex,pcol,tmpEtiq,&state)){
+    while (condStartG1(&tmp,lex,pcol,tmpEtiq,&state,strTab)){
         if (tmp == lex) return NULL;
         tmp = tmp -> suiv;
     }
@@ -30,14 +30,14 @@ LIST getNextTokenG1(LIST lex,LIST currLex, SECTION* sec,COLG * pcol,INSTR * dico
 }
 
 /* restart (sort of) the fsmG1 when a final state is reach*/
-void G1LoadLex(LIST lex,COLG *pcol,INSTR * dico,int sizeDico,LISTH * TAB,RELOCLIST* reloclist/* ,other collections to be returned to main */){
+void G1LoadLex(LIST lex,COLG *pcol,INSTR * dico,int sizeDico,LISTH * TAB,RELOCLIST* reloclist,LIST * strTab/* ,other collections to be returned to main */){
     LISTH tmpEtiq = NULL;
     if (lex != NULL ){
         LIST currLex = lex->suiv;
         /* global info */
-        SECTION currSection = none;
+        SECTION currSection = none;/* TODO: initialise top .text?? */
 
-        while((currLex = getNextTokenG1(lex,currLex, &currSection,pcol,dico,sizeDico,&tmpEtiq,TAB,reloclist)) !=NULL ){
+        while((currLex = getNextTokenG1(lex,currLex, &currSection,pcol,dico,sizeDico,&tmpEtiq,TAB,reloclist,strTab)) !=NULL ){
             /* affiche  */
         }
     }

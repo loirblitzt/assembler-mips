@@ -9,8 +9,10 @@ LIST addToList (LIST l, void* data , TYPE t, int line,char realType, char headTa
     LIST a = (LIST)malloc(sizeof(*l));
 	
 	/* initialization of the struct element */
-	a -> data = malloc(sizeFromType(t,data,realType));
+	a -> data = malloc(sizeFromType(t,data,realType)+1);
+	if(a->data == NULL){return l;}
 	memcpy((a -> data),data,sizeFromType(t,data,realType)); /* copy the data onto the struct */
+	((char*)(a->data))[sizeFromType(t,data,realType)]='\0';
 	if(l == NULL){
 		a-> suiv  = a;
 	}
@@ -84,7 +86,7 @@ size_t sizeFromType(TYPE t, void* data,char realType){
 		case string:
 		case etiquette:
 		case directive:
-			return strlen((char*)data)*sizeof(char);
+			return (strlen((char*)data))*sizeof(char);
 		break;
 		case virgule:
 		case retourLine:

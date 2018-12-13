@@ -54,9 +54,10 @@ void addHeadG(DATACOL * col, DATAG data, TYPEG1 type, int offset, int nbline){
     if (type == symbG){
         /* hazardous work ahead : get rid of the " " at the end and beginning */
         cleanString(data.asciiz+1,strlen(data.asciiz)-2);
-        (tmpl->data).asciiz = (char*)calloc(strlen(data.asciiz)-1,sizeof(char));
+        (tmpl->data).asciiz = (char*)calloc(strlen(data.asciiz),sizeof(char));
         (tmpl->data).asciiz =strncpy((tmpl->data).asciiz,data.asciiz+1,strlen(data.asciiz)-2);
-        (tmpl->data).asciiz[strlen(data.asciiz)-1] = '\0' ;
+        /* thank you valgrind */
+        /* (tmpl->data).asciiz[strlen(data.asciiz)-1] = '\0' ; */
     }
     else{
         tmpl->data = data; /* halla waka bah */

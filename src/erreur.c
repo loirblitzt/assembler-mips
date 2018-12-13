@@ -1,3 +1,4 @@
+
 /** Gestion des erreurs pour les directives et les instructions **/
 #include "erreur.h"
 
@@ -58,6 +59,7 @@ int erreurInstruction(LIST lex, TEXTCOL textc, INSTR * dico, int sizeDico){
 
 
   else if(dico[indiceDico].type=='I'){
+    if(dico[indiceDico].numOp==3){
       if(((textc.l->op)[0]==NULL ) || ((textc.l->op)[1]==NULL)){
         if(lex->type==registre){
 
@@ -91,9 +93,45 @@ int erreurInstruction(LIST lex, TEXTCOL textc, INSTR * dico, int sizeDico){
     else{printf("L'immediate n'est pas du bon type");
       return(0);
     }
-
     }
   }
+  else if(dico[indiceDico].numOp==2){
+    if(((textc.l->op)[0]==NULL ) || ((textc.l->op)[1]==NULL)){
+      if(lex->type==registre){
+
+        if(lex->data>31 || lex->data<0){
+          printf("La valeur d'un des registres n'est pas valide \n");
+          return(error);}
+        else{return(1);}
+
+        }
+    else if (lex->type==symb){/* if(){}
+      else{return(1);} */
+          }
+    else{printf("Les opérandes portant sur les registres ne sont pas du bons types\n");
+      return(error);}
+    }
+
+  else if(((textc.l->op)[0]=!NULL ) && (textc.l->op)[1]==NULL){
+    if (lex->type==hexa || lex->type==decimal){
+
+      int d = strtol(lex->data,NULL,0);
+      if(lex->data<-32768 || lex->data>32767){
+        printf("La valeur de l'immediate n'est pas valide \n");
+        return(error);
+    }
+    else{return(1);}
+
+  }
+  else{printf("L'immediate n'est pas du bon type");
+  return(error);}
+    }
+
+  }
+  else if(dico[indiceDico].numOp==0){printf("sans opérande, pas de soucis\n");
+    return(1);}
+}
+
   else if(dico[indiceDico].type=='S'){
     if(((textc.l->op)[0]==NULL) || ((textc.l->op)[1]==NULL)){
       if(lex->type==registre){
@@ -152,6 +190,7 @@ else if(dico[indiceDico].type=='B'){
 }
 
   else if(dico[indiceDico].type=='L'){
+    if(dico[indiceDico].numOp==3){
       if((textc.l->op)[0]==NULL ||(textc.l->op)[1]==NULL){
         if(lex->type==registre){
 
@@ -183,6 +222,41 @@ else if(dico[indiceDico].type=='B'){
     return(0);}
 
     }
+  }
+  else if(dico[indiceDico].numOp==2){
+    if((textc.l->op)[0]==NULL){
+      if(lex->type==registre){
+
+        if(val>31 || val<0){
+          printf("La valeur d'un des registres n'est pas valide \n");
+          return(0);}
+          else{return(1);}
+
+        }
+    else if (lex->type==symb){/* if(){}
+      else{return(1);} */
+    }
+    else{printf("Les opérandes portant sur les registres ne sont pas du bons types\n");
+      return(0);}
+    }
+
+  else if((textc.l->op)[0]!=NULL && (textc.l->op)[2]==NULL){
+    if (lex->type==hexa || lex->type==decimal){
+
+      long int d = strtol(lex->data,NULL,0);
+      if(d<-131071 || d>131070 || d%4!=0){/* a check */
+        printf("La valeur du branchement n'est pas valide \n");
+        return(0);
+    }
+    else{return(1);}
+
+  }
+  else{printf("Le branchement n'est pas du bon type");
+  return(0);}
+
+  }
+
+  }
   }
 
   else if(dico[indiceDico].type=='A'){
@@ -220,4 +294,4 @@ else if(dico[indiceDico].type=='B'){
     }
     else{printf("Le type d'instruction n'est pas bon");
     return(0);}
-  }
+}

@@ -22,7 +22,7 @@ int hachage(char *s){
 /*strcpy pour allouer*/
 
 LISTH addToHead(char *source, SECTIONH new_section, int decal, LISTH L){
-  char *new_s=calloc(strlen(source),sizeof(char));
+  char *new_s=calloc(strlen(source)+1,sizeof(char));
   strcpy(new_s,source);
   int n=hachage(new_s);
 

@@ -55,6 +55,7 @@ char* getNextToken(char** token, char* current_line,LIST* lex,int nline) {
     token_size=end-start;
     /*package the token*/
     if (token_size>0){
+    free(*token);
 	*token 	= calloc(token_size+1,sizeof(*start));
 	strncpy(*token,start,token_size);
 	(*token)[token_size]='\0';
@@ -83,6 +84,7 @@ void lex_read_line( char *line, int nline,LIST* lex) {
     while( (current_address= getNextToken(&token, current_address,lex,nline)) != NULL){ 
         puts(token);
     }
+    free(token);
     return;
 }
 

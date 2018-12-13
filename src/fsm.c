@@ -72,7 +72,7 @@ STATE updateState(char c,STATE fsm){
 		}
 	break;
 	case attFinDirective:
-		if (isblank(c) || c == '\0'){
+		if (isblank(c) || c == '\0' || c=='#'){
 			return DIRECTIVE;
 		}
 		else{

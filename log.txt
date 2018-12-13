@@ -1,0 +1,914 @@
+==27545== Memcheck, a memory error detector
+==27545== Copyright (C) 2002-2015, and GNU GPL'd, by Julian Seward et al.
+==27545== Using Valgrind-3.11.0 and LibVEX; rerun with -h for copyright info
+==27545== Command: ./builds/as-mips
+==27545== 
+--27545-- Valgrind options:
+--27545--    --leak-check=full
+--27545--    -v
+--27545-- Contents of /proc/version:
+--27545--   Linux version 4.13.0-36-generic (buildd@lgw01-amd64-033) (gcc version 5.4.0 20160609 (Ubuntu 5.4.0-6ubuntu1~16.04.9)) #40~16.04.1-Ubuntu SMP Fri Feb 16 23:25:58 UTC 2018
+--27545-- 
+--27545-- Arch and hwcaps: AMD64, LittleEndian, amd64-cx16-sse3
+--27545-- Page sizes: currently 4096, max supported 4096
+--27545-- Valgrind library directory: /usr/lib/valgrind
+--27545-- Reading syms from /home/choups/Documents/phelma/info/beInfo2A/step1/builds/as-mips
+--27545-- Reading syms from /lib/x86_64-linux-gnu/ld-2.23.so
+--27545--   Considering /lib/x86_64-linux-gnu/ld-2.23.so ..
+--27545--   .. CRC mismatch (computed aa979a42 wanted 9019bbb7)
+--27545--   Considering /usr/lib/debug/lib/x86_64-linux-gnu/ld-2.23.so ..
+--27545--   .. CRC is valid
+--27545-- Reading syms from /usr/lib/valgrind/memcheck-amd64-linux
+--27545--   Considering /usr/lib/valgrind/memcheck-amd64-linux ..
+--27545--   .. CRC mismatch (computed eea41ea9 wanted 2009db78)
+--27545--    object doesn't have a symbol table
+--27545--    object doesn't have a dynamic symbol table
+--27545-- Scheduler: using generic scheduler lock implementation.
+--27545-- Reading suppressions file: /usr/lib/valgrind/default.supp
+==27545== embedded gdbserver: reading from /tmp/vgdb-pipe-from-vgdb-to-27545-by-choups-on-???
+==27545== embedded gdbserver: writing to   /tmp/vgdb-pipe-to-vgdb-from-27545-by-choups-on-???
+==27545== embedded gdbserver: shared mem   /tmp/vgdb-pipe-shared-mem-vgdb-27545-by-choups-on-???
+==27545== 
+==27545== TO CONTROL THIS PROCESS USING vgdb (which you probably
+==27545== don't want to do, unless you know exactly what you're doing,
+==27545== or are doing some strange experiment):
+==27545==   /usr/lib/valgrind/../../bin/vgdb --pid=27545 ...command...
+==27545== 
+==27545== TO DEBUG THIS PROCESS USING GDB: start GDB like this
+==27545==   /path/to/gdb ./builds/as-mips
+==27545== and then give GDB the following command
+==27545==   target remote | /usr/lib/valgrind/../../bin/vgdb --pid=27545
+==27545== --pid is optional if only one valgrind process is running
+==27545== 
+--27545-- REDIR: 0x401cfd0 (ld-linux-x86-64.so.2:strlen) redirected to 0x3809e181 (???)
+--27545-- Reading syms from /usr/lib/valgrind/vgpreload_core-amd64-linux.so
+--27545--   Considering /usr/lib/valgrind/vgpreload_core-amd64-linux.so ..
+--27545--   .. CRC mismatch (computed 2567ccf6 wanted 49420590)
+--27545--    object doesn't have a symbol table
+--27545-- Reading syms from /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so
+--27545--   Considering /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so ..
+--27545--   .. CRC mismatch (computed 0e27c9a8 wanted ac585421)
+--27545--    object doesn't have a symbol table
+==27545== WARNING: new redirection conflicts with existing -- ignoring it
+--27545--     old: 0x0401cfd0 (strlen              ) R-> (0000.0) 0x3809e181 ???
+--27545--     new: 0x0401cfd0 (strlen              ) R-> (2007.0) 0x04c31020 strlen
+--27545-- REDIR: 0x401b920 (ld-linux-x86-64.so.2:index) redirected to 0x4c30bc0 (index)
+--27545-- REDIR: 0x401bb40 (ld-linux-x86-64.so.2:strcmp) redirected to 0x4c320d0 (strcmp)
+--27545-- REDIR: 0x401dd30 (ld-linux-x86-64.so.2:mempcpy) redirected to 0x4c35270 (mempcpy)
+--27545-- Reading syms from /lib/x86_64-linux-gnu/libc-2.23.so
+--27545--   Considering /lib/x86_64-linux-gnu/libc-2.23.so ..
+--27545--   .. CRC mismatch (computed 7a8ee3e4 wanted a5190ac4)
+--27545--   Considering /usr/lib/debug/lib/x86_64-linux-gnu/libc-2.23.so ..
+--27545--   .. CRC is valid
+--27545-- REDIR: 0x4ec9a00 (libc.so.6:strcasecmp) redirected to 0x4a286f0 (_vgnU_ifunc_wrapper)
+--27545-- REDIR: 0x4ec5280 (libc.so.6:strcspn) redirected to 0x4a286f0 (_vgnU_ifunc_wrapper)
+--27545-- REDIR: 0x4ecbcf0 (libc.so.6:strncasecmp) redirected to 0x4a286f0 (_vgnU_ifunc_wrapper)
+--27545-- REDIR: 0x4ec76f0 (libc.so.6:strpbrk) redirected to 0x4a286f0 (_vgnU_ifunc_wrapper)
+--27545-- REDIR: 0x4ec7a80 (libc.so.6:strspn) redirected to 0x4a286f0 (_vgnU_ifunc_wrapper)
+--27545-- REDIR: 0x4ec914b (libc.so.6:memcpy@GLIBC_2.2.5) redirected to 0x4a286f0 (_vgnU_ifunc_wrapper)
+--27545-- REDIR: 0x4ec7400 (libc.so.6:rindex) redirected to 0x4c308a0 (rindex)
+--27545-- REDIR: 0x4ebed10 (libc.so.6:calloc) redirected to 0x4c2faa0 (calloc)
+--27545-- REDIR: 0x4ed0760 (libc.so.6:strchrnul) redirected to 0x4c34da0 (strchrnul)
+[1;34m[WARNING:: src/main.c:main:55] [1;33mUn message WARNING_MSG !.
+[0m[1;34m[ DEBUG :: src/main.c:main:61] [1;32mUn message DEBUG_MSG !.
+[0m--27545-- REDIR: 0x4ebe130 (libc.so.6:malloc) redirected to 0x4c2db20 (malloc)
+--27545-- REDIR: 0x4ec8060 (libc.so.6:__GI_strstr) redirected to 0x4c354d0 (__strstr_sse2)
+--27545-- REDIR: 0x4ec5720 (libc.so.6:strlen) redirected to 0x4c30f60 (strlen)
+--27545-- REDIR: 0x4ece470 (libc.so.6:__GI_memcpy) redirected to 0x4c32b00 (__GI_memcpy)
+--27545-- REDIR: 0x4ebe4f0 (libc.so.6:free) redirected to 0x4c2ed80 (free)
+--27545-- REDIR: 0x4ec8860 (libc.so.6:memchr) redirected to 0x4c32170 (memchr)
+--27545-- REDIR: 0x4ec73c0 (libc.so.6:strncpy) redirected to 0x4a286f0 (_vgnU_ifunc_wrapper)
+--27545-- REDIR: 0x4ee0000 (libc.so.6:__strncpy_sse2_unaligned) redirected to 0x4c31570 (__strncpy_sse2_unaligned)
+--27545-- REDIR: 0x4ece3f0 (libc.so.6:memcpy@@GLIBC_2.14) redirected to 0x4a286f0 (_vgnU_ifunc_wrapper)
+--27545-- REDIR: 0x4ed9820 (libc.so.6:__memcpy_sse2_unaligned) redirected to 0x4c324a0 (memcpy@@GLIBC_2.14)
+--27545-- REDIR: 0x4ec93b0 (libc.so.6:__GI_mempcpy) redirected to 0x4c34fa0 (__GI_mempcpy)
+[1;34m[ DEBUG :: src/main.c:main:88] [1;32msource code got 25 lines.
+[0m#test de l'automate de la section .data ce commentaitre doit être saute
+#test
+.set
+noreorder
+#.set doit etre ignore
+.data
+.space
+10
+,
+20
+#doit detecter que lon se trouve dans .data
+.bss
+a
+:
+.space
+34
+.space
+42
+.data
+.asciiz
+"salut"
+,
+"\"vous\""
+#gestion des \" ou pas
+.word
+45
+#on remarquera que le decalge ici est de 52 et non de 45 (alignement sur 4oct)
+.byte
+12
+,
+23
+.text
+ADDI
+$2
+,
+$3
+,
+a
+NOP
+ADDI
+$2
+,
+$3
+,
+Z
+MOVE
+$1
+,
+$2
+NEG
+$1
+,
+$2
+LI
+$1
+,
+3
+BLT
+$5
+,
+$6
+,
+12
+BNE
+$0
+,
+$1
+,
+12
+.data
+[34;1m----------------------------[0m
+Type of : commentaire 
+line : 1 
+data : #test de l'automate de la section .data ce commentaitre doit être saute
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : retourLine 
+line : 1 
+data : 
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : commentaire 
+line : 2 
+data : #test
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : retourLine 
+line : 2 
+data : 
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : directive 
+line : 3 
+data : .set
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : symb 
+line : 3 
+data : noreorder
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : retourLine 
+line : 3 
+data : 
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : commentaire 
+line : 4 
+data : #.set doit etre ignore
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : retourLine 
+line : 4 
+data : 
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : directive 
+line : 6 
+data : .data
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : retourLine 
+line : 6 
+data : 
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : directive 
+line : 7 
+data : .space
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : decimal 
+line : 7 
+data : 10
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : virgule 
+line : 7 
+data : ,
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : decimal 
+line : 7 
+data : 20
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : retourLine 
+line : 7 
+data : 
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : commentaire 
+line : 8 
+data : #doit detecter que lon se trouve dans .data
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : retourLine 
+line : 8 
+data : 
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : directive 
+line : 9 
+data : .bss
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : retourLine 
+line : 9 
+data : 
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : symb 
+line : 10 
+data : a
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : deuxPoints 
+line : 10 
+data : :
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : directive 
+line : 10 
+data : .space
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : decimal 
+line : 10 
+data : 34
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : retourLine 
+line : 10 
+data : 
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : directive 
+line : 11 
+data : .space
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : decimal 
+line : 11 
+data : 42
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : retourLine 
+line : 11 
+data : 
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : directive 
+line : 12 
+data : .data
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : retourLine 
+line : 12 
+data : 
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : directive 
+line : 13 
+data : .asciiz
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : string 
+line : 13 
+data : "salut"
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : virgule 
+line : 13 
+data : ,
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : string 
+line : 13 
+data : "\"vous\""
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : commentaire 
+line : 13 
+data : #gestion des \" ou pas
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : retourLine 
+line : 13 
+data : 
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : directive 
+line : 14 
+data : .word
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : decimal 
+line : 14 
+data : 45
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : commentaire 
+line : 14 
+data : #on remarquera que le decalge ici est de 52 et non de 45 (alignement sur 4oct)
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : retourLine 
+line : 14 
+data : 
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : directive 
+line : 15 
+data : .byte
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : decimal 
+line : 15 
+data : 12
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : virgule 
+line : 15 
+data : ,
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : decimal 
+line : 15 
+data : 23
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : retourLine 
+line : 15 
+data : 
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : directive 
+line : 16 
+data : .text
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : retourLine 
+line : 16 
+data : 
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : symb 
+line : 17 
+data : ADDI
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : registre 
+line : 17 
+data : $2
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : virgule 
+line : 17 
+data : ,
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : registre 
+line : 17 
+data : $3
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : virgule 
+line : 17 
+data : ,
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : symb 
+line : 17 
+data : a
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : retourLine 
+line : 17 
+data : 
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : symb 
+line : 18 
+data : NOP
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : retourLine 
+line : 18 
+data : 
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : symb 
+line : 19 
+data : ADDI
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : registre 
+line : 19 
+data : $2
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : virgule 
+line : 19 
+data : ,
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : registre 
+line : 19 
+data : $3
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : virgule 
+line : 19 
+data : ,
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : symb 
+line : 19 
+data--27545-- REDIR: 0x4ec3cd0 (libc.so.6:strcmp) redirected to 0x4a286f0 (_vgnU_ifunc_wrapper)
+--27545-- REDIR: 0x4ed9570 (libc.so.6:__strcmp_sse2_unaligned) redirected to 0x4c31f90 (strcmp)
+--27545-- REDIR: 0x4ec5160 (libc.so.6:strcpy) redirected to 0x4a286f0 (_vgnU_ifunc_wrapper)
+--27545-- REDIR: 0x4edf9d0 (libc.so.6:__strcpy_sse2_unaligned) redirected to 0x4c31040 (strcpy)
+--27545-- REDIR: 0x4f80a70 (libc.so.6:__strcasecmp_sse42) redirected to 0x4c31860 (strcasecmp)
+ : Z
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : retourLine 
+line : 19 
+data : 
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : symb 
+line : 20 
+data : MOVE
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : registre 
+line : 20 
+data : $1
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : virgule 
+line : 20 
+data : ,
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : registre 
+line : 20 
+data : $2
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : retourLine 
+line : 20 
+data : 
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : symb 
+line : 21 
+data : NEG
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : registre 
+line : 21 
+data : $1
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : virgule 
+line : 21 
+data : ,
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : registre 
+line : 21 
+data : $2
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : retourLine 
+line : 21 
+data : 
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : symb 
+line : 22 
+data : LI
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : registre 
+line : 22 
+data : $1
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : virgule 
+line : 22 
+data : ,
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : decimal 
+line : 22 
+data : 3
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : retourLine 
+line : 22 
+data : 
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : symb 
+line : 23 
+data : BLT
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : registre 
+line : 23 
+data : $5
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : virgule 
+line : 23 
+data : ,
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : registre 
+line : 23 
+data : $6
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : virgule 
+line : 23 
+data : ,
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : decimal 
+line : 23 
+data : 12
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : retourLine 
+line : 23 
+data : 
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : symb 
+line : 24 
+data : BNE
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : registre 
+line : 24 
+data : $0
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : virgule 
+line : 24 
+data : ,
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : registre 
+line : 24 
+data : $1
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : virgule 
+line : 24 
+data : ,
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : decimal 
+line : 24 
+data : 12
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : retourLine 
+line : 24 
+data : 
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : directive 
+line : 25 
+data : .data
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : retourLine 
+line : 25 
+data : 
+[34;1m----------------------------[0m
+Collection de la section : data
+---------------
+type : uint
+data : 10
+offset : 0
+nbLine : 7
+---------------
+---------------
+type : uint
+data : 20
+offset : 10
+nbLine : 7
+---------------
+---------------
+type : string
+data : salut
+offset : 30
+nbLine : 13
+---------------
+---------------
+type : string
+data : "vous"
+offset : 36
+nbLine : 13
+---------------
+---------------
+type : int
+data : 45
+offset : 44
+nbLine : 14
+---------------
+---------------
+type : char
+data : 12
+offset : 48
+nbLine : 15
+---------------
+---------------
+type : char
+data : 23
+offset : 49
+nbLine : 15
+---------------
+Collection de la section : bss
+---------------
+type : uint
+data : 34
+offset : 0
+nbLine : 10
+---------------
+---------------
+type : uint
+data : 42
+offset : 34
+nbLine : 11
+---------------
+Collection de la section : text
+---------------
+instruction : ADDI
+ligne : 17
+nombre doperandes : 3
+decalage : 0
+----Opérandes : 
+[34;1m----------------------------[0m
+Type of : registre 
+line : 17 
+data : $2
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : registre 
+line : 17 
+data : $3
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : symb 
+line : 17 
+data : a
+[34;1m----------------------------[0m
+---------------
+---------------
+instruction : SLL
+ligne : 18
+nombre doperandes : 3
+decalage : 4
+----Opérandes : 
+[34;1m----------------------------[0m
+Type of : registre 
+line : 18 
+data : $0
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : registre 
+line : 18 
+data : $0
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : decimal 
+line : 18 
+data : 0
+[34;1m----------------------------[0m
+---------------
+---------------
+instruction : ADDI
+ligne : 19
+nombre doperandes : 3
+decalage : 8
+----Opérandes : 
+[34;1m----------------------------[0m
+Type of : registre 
+line : 19 
+data : $2
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : registre 
+line : 19 
+data : $3
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : symb 
+line : 19 
+data : Z
+[34;1m----------------------------[0m
+---------------
+---------------
+instruction : ADD
+ligne : 20
+nombre doperandes : 3
+decalage : 12
+----Opérandes : 
+[34;1m----------------------------[0m
+Type of : registre 
+line : 20 
+data : $1
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : registre 
+line : 20 
+data : $2
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : registre 
+line : 20 
+data : $0
+[34;1m----------------------------[0m
+---------------
+---------------
+instruction : SUB
+ligne : 21
+nombre doperandes : 3
+decalage : 16
+----Opérandes : 
+[34;1m----------------------------[0m
+Type of : registre 
+line : 21 
+data : $1
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : registre 
+line : 21 
+data : $0
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : registre 
+line : 21 
+data : $2
+[34;1m----------------------------[0m
+---------------
+---------------
+instruction : ADDI
+ligne : 22
+nombre doperandes : 3
+decalage : 20
+----Opérandes : 
+[34;1m----------------------------[0m
+Type of : registre 
+line : 22 
+data : $1
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : registre 
+line : 22 
+data : $0
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : decimal 
+line : 22 
+data : 3
+[34;1m----------------------------[0m
+---------------
+---------------
+instruction : SLT
+ligne : 23
+nombre doperandes : 3
+decalage : 24
+----Opérandes : 
+[34;1m----------------------------[0m
+Type of : registre 
+line : 23 
+data : $1
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : registre 
+line : 23 
+data : $5
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : registre 
+line : 23 
+data : $6
+[34;1m----------------------------[0m
+---------------
+---------------
+instruction : BNE
+ligne : 23
+nombre doperandes : 3
+decalage : 28
+----Opérandes : 
+[34;1m----------------------------[0m
+Type of : registre 
+line : 23 
+data : $1
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : registre 
+line : 23 
+data : $0
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : decimal 
+line : 23 
+data : 12
+[34;1m----------------------------[0m
+---------------
+---------------
+instruction : BNE
+ligne : 24
+nombre doperandes : 3
+decalage : 32
+----Opérandes : 
+[34;1m----------------------------[0m
+Type of : registre 
+line : 24 
+data : $0
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : registre 
+line : 24 
+data : $1
+[34;1m----------------------------[0m
+[34;1m----------------------------[0m
+Type of : decimal 
+line : 24 
+data : 12
+[34;1m----------------------------[0m
+---------------
+[32m_--------------------[0m
+affichage des etiquettes déclarés stockées
+[31m-_-_-__-_-_-_-__-_-[0m
+name : a
+section : bssH
+offset : 0
+[31m-_-_-__-_-_-_-__-_-[0m
+[32m_--------------------[0m
+--------------
+Collection de la section : text
+offset : 0
+def etiquette : a
+  section : bssH
+  offset : 0
+--------------
+--------------
+Collection de la section : text
+offset : 8
+def etiquette : Z : inconnue
+--------------
+==27545== 
+==27545== HEAP SUMMARY:
+==27545==     in use at exit: 0 bytes in 0 blocks
+==27545==   total heap usage: 343 allocs, 343 frees, 19,202 bytes allocated
+==27545== 
+==27545== All heap blocks were freed -- no leaks are possible
+==27545== 
+==27545== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==27545== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

@@ -41,6 +41,8 @@ LIST addToList(LIST l, void* data, TYPE t, int line,char realType, char headTail
 
 LIST addHead(LIST l, void* data, TYPE t, int line, char realType);
 
+LIST addHead2(LIST l, void* data, TYPE t, int line,int taille);
+
 LIST addTail(LIST l, void* data, TYPE t, int line,char realType);
 
 LIST insertInList(LIST l, int i, void* data, TYPE t, int line,char realType);

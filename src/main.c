@@ -40,6 +40,7 @@ int main ( int argc, char *argv[] ) {
     char         	 *file 	= NULL;
     char *           namedico = NULL;
     int sizeDico;
+    LIST m_strTab = createList();
     LIST lex = createList();
     COLG col;
     col.data=createDataCol();col.bss=createDataCol();col.text=createTextCol();
@@ -86,19 +87,23 @@ int main ( int argc, char *argv[] ) {
     lex_load_file( file, &nlines, &lex );
     DEBUG_MSG("source code got %d lines",nlines);
     printAllData(lex);
-    /*-------------------grammar 1 analysis------------------------*/
-    G1LoadLex(lex,&col,dico,sizeDico,TAB,&reloclist);
+    /*-------------------grammar 1 & 2 analysis------------------------*/
+    G1LoadLex(lex,&col,dico,sizeDico,TAB,&reloclist,&m_strTab);
+    updateReloc(reloclist, TAB); 
+
     printColG(col.data);
     printColG(col.bss);
     printColT(col.text,dico);
     printTab(TAB);
     printAllElR(reloclist);
+    /* printAllData(m_strTab); */
     /* test pour le dico
     printf("sizedico : %d\n", sizeDico);
     printf("%d\n",searchDico("ADD",dico,sizeDico));
  */
     /* ---------------- Free memory and terminate------------------*/
     freeAllElements(lex);
+    freeAllElements(m_strTab);
     freeColG(col.data);freeColT(col.text);freeColG(col.bss);
     freeDico(dico,sizeDico);
     suppTab(TAB,N);

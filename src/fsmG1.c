@@ -23,16 +23,15 @@ int isPseudoInstr(char* name){
 char replaceInstr(LIST  lex,int indPInstr){
     /* the arguments of the pseudo instruction are supposed to be legal, otherwise the error will be handle later */
     LIST l = lex;
-    char* reg0 = "$0\0";
-    char* vir = ",\0";
+    LIST reg,target;
     switch(indPInstr){
         case -1:
             return 0; /* code for error */
         break;
         case 0: /* NOP */
             free(l->data);
-            l->data = malloc((strlen("SLL"))*sizeof(char));
-	        memcpy((l -> data),"SLL",(strlen("SLL"))*sizeof(char));
+            l->data = malloc((strlen("SLL")+1)*sizeof(char));
+	        memcpy((l -> data),"SLL",(strlen("SLL")+1)*sizeof(char));
             l->type = symb;
             l = addHead2(l,(char*)"$0",registre,lex->line,3);
             l = addHead2(l,(char*)",",virgule,lex->line,2);
@@ -43,8 +42,8 @@ char replaceInstr(LIST  lex,int indPInstr){
         break;
         case 1: /* MOVE */
             free(l->data);
-            l->data = malloc((strlen("ADD"))*sizeof(char));
-	        memcpy((l -> data),"ADD",(strlen("ADD"))*sizeof(char));
+            l->data = malloc((strlen("ADD")+1)*sizeof(char));
+	        memcpy((l -> data),"ADD",(strlen("ADD")+1)*sizeof(char));
             l->type = symb;
             l = l->suiv;
             if(l->type!= registre)return 0;
@@ -57,8 +56,8 @@ char replaceInstr(LIST  lex,int indPInstr){
         break;
         case 2:/* NEG */
             free(l->data);
-            l->data = malloc((strlen("SUB"))*sizeof(char));
-	        memcpy((l -> data),"SUB",(strlen("SUB"))*sizeof(char));
+            l->data = malloc((strlen("SUB")+1)*sizeof(char));
+	        memcpy((l -> data),"SUB",(strlen("SUB")+1)*sizeof(char));
             l->type = symb;
             l = l->suiv;
             if(l->type!=registre)return 0;
@@ -71,8 +70,8 @@ char replaceInstr(LIST  lex,int indPInstr){
         break;
         case 3:/* LI */
             free(l->data);
-            l->data = malloc((strlen("ADDI"))*sizeof(char));
-	        memcpy((l -> data),"ADDI",(strlen("ADDI"))*sizeof(char));
+            l->data = malloc((strlen("ADDI")+1)*sizeof(char));
+	        memcpy((l -> data),"ADDI",(strlen("ADDI")+1)*sizeof(char));
             l->type = symb;
             l = l->suiv;
             if(l->type!=registre)return 0;
@@ -85,8 +84,8 @@ char replaceInstr(LIST  lex,int indPInstr){
         break;
         case 4:/* BLT */
             free(l->data);
-            l->data = malloc((strlen("SLT"))*sizeof(char));
-	        memcpy((l -> data),"SLT",(strlen("SLT"))*sizeof(char));
+            l->data = malloc((strlen("SLT")+1)*sizeof(char));
+	        memcpy((l -> data),"SLT",(strlen("SLT")+1)*sizeof(char));
             l->type = symb;
             l = addHead2(l,"$1",registre,lex->line,3);
             l = addHead2(l,",",virgule,lex->line,2);
@@ -104,16 +103,78 @@ char replaceInstr(LIST  lex,int indPInstr){
         break;
         /* HALL OF THE WORST TO IMPLEMENT */
         case 5:/* LW */
+            if(l->suiv != NULL && (l->suiv->type == registre )
+                && l->suiv->suiv != NULL && ((l->suiv)->suiv->type ==virgule) 
+                && l->suiv->suiv->suiv != NULL && (l->suiv)->suiv->suiv->type == symb 
+                && l->suiv->suiv->suiv->suiv != NULL && (l->suiv)->suiv->suiv->suiv != parentheseg ){
+                    free(l->data);
+                    l->data = malloc((strlen("LUI"))*sizeof(char));
+	                memcpy((l -> data),"LUI",(strlen("LUI"))*sizeof(char));
+                    l->type = symb;
+                    l= l->suiv;
+                    if(l->type!=registre)return 0;
+                    reg = l;
+                    l = l->suiv;
+                    if(l->type != virgule)return 0;
+                    l = l->suiv;
+                    if(l->type != symb)return 0;
+                    l->trueType=1;
+                    target=l;
+                    l = l->suiv;
+                    l = addHead2(l,"\n",retourLine,lex->line,2);
+                    l = addHead2(l,"LW",symb,lex->line,3);
+                    l = addHead2(l,(char*)(reg->data),registre,lex->line,3);
+                    l = addHead2(l,",",virgule,lex->line,2);
+                    l = addHead2(l,target->data,symb,lex->line,strlen(target)+1);/* TODO:verify the length of target */
+                    l = addHead2(l,"(",parentheseg,lex->line,2);
+                    l = addHead2(l,"$1",registre,lex->line,3);
+                    l = addHead2(l,")",parenthesed,lex->line,2);
+                }
+                else {
+                    return 0;
+                }
         
         break;
         case 6:/* SW */
-        
+            if(l->suiv != NULL && (l->suiv->type == registre )
+                && l->suiv->suiv != NULL && ((l->suiv)->suiv->type ==virgule) 
+                && l->suiv->suiv->suiv != NULL && (l->suiv)->suiv->suiv->type == symb 
+                && l->suiv->suiv->suiv->suiv != NULL && (l->suiv)->suiv->suiv->suiv != parentheseg ){
+                    free(l->data);
+                    l->data = malloc((strlen("LUI"))*sizeof(char));
+	                memcpy((l -> data),"LUI",(strlen("LUI"))*sizeof(char));
+                    l->type = symb;
+                    l= l->suiv;
+                    if(l->type!=registre)return 0;
+                    reg = l;
+                    l = l->suiv;
+                    if(l->type != virgule)return 0;
+                    l = l->suiv;
+                    if(l->type != symb)return 0;
+                    target=l;
+                    l =lex->suiv;
+                    l = addHead2(l,"$1",registre,lex->line,3);
+                    l = addHead2(l,",",virgule,lex->line,2);
+                    l = addHead2(l,target->data,retourLine,lex->line,strlen(target->data)+1);
+                    l->trueType = 1;/* used to indicate if it is rmips_up */
+                    l = addHead2(l,"\n",retourLine,lex->line,2);
+                    l = addHead2(l,"SW",symb,lex->line,3);
+                    l = l->suiv;
+                    l = l->suiv;
+                    l = l->suiv;
+                    l = addHead2(l,"(",parentheseg,lex->line,2);
+                    l = addHead2(l,"$1",registre,lex->line,3);
+                    l = addHead2(l,")",parenthesed,lex->line,2);
+                }
+                else {
+                    return 0;
+                }        
         break;
     }
     return 1;
 }
 
-char condStartG1(LIST * lex,LIST nullLex,COLG * pcol,LISTH * pendingEtiq,STATEG1* pstate){
+char condStartG1(LIST * lex,LIST nullLex,COLG * pcol,LISTH * pendingEtiq,STATEG1* pstate,LIST * strTab){
     if((*lex)->type == commentaire ||(*lex)->type == retourLine )return 1;
     if ((*lex)->type == directive && (strcmp((*lex)->data,".set")==0)){
         *lex = (*lex)->suiv;
@@ -127,6 +188,8 @@ char condStartG1(LIST * lex,LIST nullLex,COLG * pcol,LISTH * pendingEtiq,STATEG1
         if((*lex)->suiv == nullLex) return 1;
         if(((*lex)->suiv)->type == deuxPoints){
             *lex = (*lex)->suiv;
+            /* add to the strTab to use it then , it is in order*/
+            *strTab = addHead2(*strTab,l->data,symb,0,strlen(l->data)+1);
             /* register l as a etiquette*/
             if(addToPending(pendingEtiq,(char *)(l->data))==0){
                 *pstate = error;
@@ -209,7 +272,7 @@ STATEG1 updateSTATEG1(LIST lex,STATEG1 state,SECTION* psec,COLG * pcol,INSTR * d
         case attTextpd:
         case attTextpg:
         case attTextreg:
-            return (STATEG1)(state+1);
+            return (STATEG1)(state+1);/* TODO: mettre registre dans les op */
         break;
         case attArgText:
             if (erreurInstruction(lex, pcol->text,dico,sizeDico)==0){
@@ -223,11 +286,16 @@ STATEG1 updateSTATEG1(LIST lex,STATEG1 state,SECTION* psec,COLG * pcol,INSTR * d
                 if(lex->type == symb){/* reloc type to be checked */
                     INSTR currInstr = dico[(pcol->text).l->instr];
                     switch(currInstr.type){/* TODO: reloc pour LUI qui est I mais est tjr en <<16 */
-                        case 'I': /* r mips lo16 really ? */
-                            *reloclist = addHeadR(*reloclist,(SECTION)text,(pcol->text).currOffset-4,(RELOCTYPE)R_MIPS_LO16,seekSymb(/* (char*) */(lex->data),TAB),lex);
+                        case 'I': /* r mips lo16 really ? : yes */
+                            if(lex->trueType ==0){
+                                *reloclist = addHeadR(*reloclist,(SECTION)text,(pcol->text).currOffset-4,(RELOCTYPE)mR_MIPS_LO16,seekSymb(/* (char*) */(lex->data),TAB),lex);
+                            }
+                            else{
+                                *reloclist = addHeadR(*reloclist,(SECTION)text,(pcol->text).currOffset-4,(RELOCTYPE)mR_MIPS_HI16,seekSymb(/* (char*) */(lex->data),TAB),lex);
+                            }
                         break;
                         case 'A': /* r mips 26 */
-                            *reloclist = addHeadR(*reloclist,(SECTION)text,(pcol->text).currOffset-4,(RELOCTYPE)R_MIPS_26,seekSymb(/* (char*) */(lex->data),TAB),lex);
+                            *reloclist = addHeadR(*reloclist,(SECTION)text,(pcol->text).currOffset-4,(RELOCTYPE)mR_MIPS_26,seekSymb(/* (char*) */(lex->data),TAB),lex);
                         break;
                     }
                 }
@@ -307,7 +375,7 @@ STATEG1 updateSTATEG1(LIST lex,STATEG1 state,SECTION* psec,COLG * pcol,INSTR * d
                 /* if symb push into relocLIST */
                 (pcol->data).currentOffset+= ((4-((pcol->data).currentOffset%4))%4);
                 if(packagePending(pendingEtiq,TAB,*psec,(pcol->data).currentOffset)==0){return error;}
-                *reloclist = addHeadR(*reloclist,(SECTION)data,(pcol->data).currentOffset,R_MIPS_32,seekSymb(/* (char*) */(lex->data),TAB),lex);
+                *reloclist = addHeadR(*reloclist,(SECTION)data,(pcol->data).currentOffset,mR_MIPS_32,seekSymb(/* (char*) */(lex->data),TAB),lex);
                 /* strange value in datacol */
                 addHeadG(&(pcol->data),(DATAG)0,intG,(pcol->data).currentOffset,lex->line);
                 (pcol->data).currentOffset += 4;

@@ -8,10 +8,10 @@
 #include "hach.h"
 
 enum _relocType {
-    R_MIPS_32=2,
-    R_MIPS_26=4,
-    R_MIPS_HI16=5,
-    R_MIPS_LO16=6
+    mR_MIPS_32=2,
+    mR_MIPS_26=4,
+    mR_MIPS_HI16=5,
+    mR_MIPS_LO16=6
 }; typedef enum _relocType RELOCTYPE;
 
 struct _reloclist {
@@ -30,4 +30,8 @@ void printELR(RELOCLIST);
 void printAllElR(RELOCLIST);
 
 void freeListR(RELOCLIST);
+
+void updateReloc(RELOCLIST relocL, LISTH * TAB);
+
+RELOCLIST seekWithName(char * name , RELOCLIST l);
 #endif
