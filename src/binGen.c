@@ -10,13 +10,13 @@ void swap(union instrBin * a){
     c[1] = tmp;
 }
 
-int* makeBinText(COLG col,INSTR * dico ,int * size,int sizeDico,LISTH * TAB){/* TODO: penser à swap */
+int* makeBinText(COLG col,INSTR * dico ,int * size,int sizeDico,LISTH * TAB){
     int i=0;
     int j;
     LISTH pSymb = NULL;
+    if(col.text.l== NULL)return NULL;
     *size = col.text.currOffset/4;
     union instrBin * tab = (union instrBin*)calloc(*size,sizeof(union instrBin));
-    /* TODO: bussiness dico needed*/
     TEXTLIST l = col.text.l -> suiv;
     int myInstr;
     do{
@@ -73,6 +73,9 @@ int* makeBinText(COLG col,INSTR * dico ,int * size,int sizeDico,LISTH * TAB){/* 
                 }
             break;
             case 'S':
+            if(strcmp(dico[myInstr].name,"ROTR")==0){
+                tab[i].rInst.rs = 1;
+            }
                 tab[i].rInst.optcode = dico[myInstr].opcode;
                 tab[i].rInst.function = dico[myInstr].function;
                 for(j=0;j<dico[myInstr].numOp;j++){
@@ -91,7 +94,18 @@ int* makeBinText(COLG col,INSTR * dico ,int * size,int sizeDico,LISTH * TAB){/* 
             break;
             case 'A':
                 tab[i].jInst.opcode = dico[myInstr].opcode;
-                tab[i].jInst.target = strtol((l->op[0])->data,NULL,0);
+                if(l->op[0]->type == symb){
+                    pSymb = seekSymb(l->op[0]->data,TAB);
+                    if(pSymb == NULL){
+                            tab[i].jInst.target = 0;
+                        }
+                        else{
+                            tab[i].jInst.target = pSymb->decalage>>2;
+                        }
+                }
+                else{
+                    tab[i].jInst.target = strtol((l->op[0])->data,NULL,0);
+                }
             break;
             case 'L':
                 tab[i].iInst.opcode = dico[myInstr].opcode;
@@ -238,7 +252,7 @@ char** makeCharSym(LIST * m_strTab,RELOCLIST relocL,int * size){
         /* if not declared, add at the end of the list */
         cursor = relocL->suiv;
         do{
-            if(cursor->pHach == NULL && !(isInList(*m_strTab,cursor->lex->data))){/* TODO: does this checks for doublons */
+            if(cursor->pHach == NULL && !(isInList(*m_strTab,cursor->lex->data))){
                 *m_strTab = addHead2(*m_strTab,cursor->lex->data,symb,0,strlen(cursor->lex->data)+1);
             }
             cursor = cursor -> suiv;
@@ -301,7 +315,7 @@ Elf32_Sym* makeStructSym(RELOCLIST relocL, LIST m_strTab,section strtab,section 
     do{
         /* ajout dans l'odre de strtab */
         LISTH curTab = seekSymb(l->data,TAB);
-        lInOrder = seekWithName(l->data,relocL);/* TODO: not really needed */
+        lInOrder = seekWithName(l->data,relocL);
         /* symb  has been defined */
         if(curTab != NULL){
             res[indice].st_name = elf_get_string_offset(strtab->start,strtab->sz,l->data);
@@ -382,7 +396,6 @@ struct relSection makeStructReloc(RELOCLIST relocL,section strtab,section shstra
         }
         else if(l->sec == text){
             out.text[indText].r_offset = l->offset;
-            /* TODO: Handle the case where pHach == NULL because of declaration */
             if(l->pHach ==NULL){
                 out.text[indText].r_info = ELF32_R_INFO(elf_get_sym_index_from_name(symtab,shstrab,strtab,l->lex->data),l->relocType);/* ELF32_R_INFO(getSymNum(m_strTab,l->lex->data),l->relocType); */
             }

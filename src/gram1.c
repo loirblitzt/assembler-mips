@@ -18,13 +18,13 @@ LIST getNextTokenG1(LIST lex,LIST currLex, SECTION* sec,COLG * pcol,INSTR * dico
     }
     /* boucle fin */
     while (condEndG1(tmp,lex,sec,&state,pcol,dico,sizeDico,tmpEtiq,TAB,reloclist)){
-        if (tmp == lex){ printf("ERROR\n"); return NULL;}
+        if (tmp == lex){ printf("ERROR\n"); exit( EXIT_FAILURE );return NULL;}
         tmp = tmp -> suiv;
     }
     /* check conformite & package */
     if (state == error){
         printf("\033[31m:ERROR IN FSM:\033[0m\n");
-        /* exit( EXIT_FAILURE ); */
+        exit( EXIT_FAILURE );
         return NULL;
     }
     if (tmp != lex){
@@ -39,7 +39,7 @@ void G1LoadLex(LIST lex,COLG *pcol,INSTR * dico,int sizeDico,LISTH * TAB,RELOCLI
     if (lex != NULL ){
         LIST currLex = lex->suiv;
         /* global info */
-        SECTION currSection = none;/* TODO: initialise top .text?? */
+        SECTION currSection = text;/* initialized to section text */
 
         while((currLex = getNextTokenG1(lex,currLex, &currSection,pcol,dico,sizeDico,&tmpEtiq,TAB,reloclist,strTab)) !=NULL ){
             /* affiche  */

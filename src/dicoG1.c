@@ -2,7 +2,6 @@
 
 #include "dicoG1.h"
 
-/* NOTE works !!! */
 INSTR* loadDico(char * nameFile,int * pnbEl){
     FILE* f = fopen(nameFile,"r");
     char tmpC[512];

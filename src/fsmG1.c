@@ -269,7 +269,7 @@ STATEG1 updateSTATEG1(LIST lex,STATEG1 state,SECTION* psec,COLG * pcol,INSTR * d
             }
         break;
         case attTextreg:
-            /* TODO: mettre registre dans les op ou pas ?*/
+            /* the register is put in the struct*/
             if(addRegister(lex,pcol->text.l)==0)return error;
         case attTextpd:
         case attTextpg:
@@ -286,7 +286,7 @@ STATEG1 updateSTATEG1(LIST lex,STATEG1 state,SECTION* psec,COLG * pcol,INSTR * d
                 /* if symb push into relocLIST */
                 if(lex->type == symb){/* reloc type to be checked */
                     INSTR currInstr = dico[(pcol->text).l->instr];
-                    switch(currInstr.type){/* TODO: verif LUI quand pseudo instruction*/
+                    switch(currInstr.type){
                         case 'I': /* r mips lo16 really ? : yes */
                             if(lex->trueType ==0){
                                 *reloclist = addHeadR(*reloclist,(SECTION)text,(pcol->text).currOffset-4,(RELOCTYPE)mR_MIPS_LO16,seekSymb(/* (char*) */(lex->data),TAB),lex);

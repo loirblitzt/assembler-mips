@@ -1,8 +1,3 @@
-/**
- * @file main.c
- * @author François Portet <francois.portet@imag.fr> from François Cayre
- * @brief Main entry point for MIPS assembler.
- */
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -52,40 +47,28 @@ int main ( int argc, char *argv[] ) {
 
     RELOCLIST reloclist = NULL;
 
-    /* exemples d'utilisation des macros du fichier notify.h */
-    /* WARNING_MSG : sera toujours affiche */
-    WARNING_MSG("Un message WARNING_MSG !");
+    INSTR * dico;
 
-    /* macro INFO_MSG : uniquement si compilé avec -DVERBOSE. Cf. Makefile*/
-    INFO_MSG("Un message INFO_MSG : Debut du programme %s", argv[0]);
+    /* --------------setting up the arguments------------------------- */
 
-    /* macro DEBUG_MSG : uniquement si compilé avec -DDEBUG (ie : compilation avec make debug). Cf. Makefile */
-    DEBUG_MSG("Un message DEBUG_MSG !");
-
-    /* La macro suivante provoquerait l'affichage du message
-       puis la sortie du programme avec un code erreur non nul (EXIT_FAILURE) */
-    /* ERROR_MSG("Erreur. Arret du programme"); */
-
-    
-    if ( argc <3 ) {
-        char accept = 'y';/* ; */
+    if ( argc <2 ) {/* default mode */
         print_usage(argv[0]);
-        printf("\nDo you want to run run the program with default files\n[y\\n] : \n");
-        /* scanf("%c",&accept); */
-        if(accept=='y'){
-            file  	= "tests/testG1data.txt";/* argv[argc-2]; */
-            namedico = argv[argc-1];
-            INSTR * dico = loadDico("tests/simpledico.dico",&sizeDico);
-        }else{
-            exit( EXIT_FAILURE );
-        }
+            file  	= strdup("data/testG1data.s");/* argv[argc-2]; */
+            dico = loadDico("data/simpledico.dico",&sizeDico);
+    }
+    else if(argc < 3){
+        /* used to choose the file to be compiled */
+        file  	= argv[argc-1];
+        /* use default dico */
+        dico = loadDico("data/simpledico.dico",&sizeDico);
     }
     else{
-        /* used to choose the file to be compiled */
         file  	= argv[argc-2];
         namedico = argv[argc-1];
+        dico = loadDico(namedico,&sizeDico);
     }
-    INSTR * dico = loadDico("tests/simpledico.dico",&sizeDico);
+    
+    /* -----------------reading the dico -----------------------------*/
     if(dico == NULL){
         printf("Not able to read dico \n");
         exit( EXIT_FAILURE);
@@ -95,12 +78,12 @@ int main ( int argc, char *argv[] ) {
         exit( EXIT_FAILURE );
     }
 
-
-
     /* ---------------- do the lexical analysis -------------------*/
+    
     lex_load_file( file, &nlines, &lex );
     DEBUG_MSG("source code got %d lines",nlines);
-    /* printAllData(lex); */
+    printAllData(lex);
+
     /*-------------------grammar 1 & 2 analysis------------------------*/
     G1LoadLex(lex,&col,dico,sizeDico,TAB,&reloclist,&m_strTab);
     updateReloc(reloclist, TAB); 
@@ -111,20 +94,35 @@ int main ( int argc, char *argv[] ) {
     printTab(TAB);
     printAllElR(reloclist);
 
-    fakeMain(col,reloclist,m_strTab,"out.o",TAB, dico , sizeDico);
+    /* generation of the binaries */
 
-    /* printAllData(m_strTab); */
-    /* test pour le dico
-    printf("sizedico : %d\n", sizeDico);
-    printf("%d\n",searchDico("ADD",dico,sizeDico));
- */
+    outputFileName = file;
+    outputFileName[strlen(outputFileName)-1] = 'o';
+    fakeMain(col,reloclist,m_strTab,outputFileName,TAB, dico , sizeDico);
+
     /* ---------------- Free memory and terminate------------------*/
+
     freeAllElements(lex);
     freeAllElements(m_strTab);
     freeColG(col.data);freeColT(col.text);freeColG(col.bss);
     freeDico(dico,sizeDico);
     suppTab(TAB,N);
     freeListR(reloclist);
+    if ( argc <2 ) {
+        free(file);
+    }
+    /* !!! hey !!! */
+
     exit( EXIT_SUCCESS );
 }
 
+
+
+
+
+
+    /* 
+    WARNING_MSG("Un message WARNING_MSG !");
+    INFO_MSG("Un message INFO_MSG : Debut du programme %s", argv[0]);
+
+    DEBUG_MSG("Un message DEBUG_MSG !"); */

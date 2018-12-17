@@ -98,7 +98,7 @@ int erreurInstruction(LIST lex, TEXTCOL textc, INSTR * dico, int sizeDico){
     }
   }
   else if(dico[indiceDico].numOp==2){
-    if(((textc.l->op)[0]==NULL ) && ((textc.l->op)[1]==NULL)){/* TODO: ask if it is not && instead, edit almost sure i fixed it */
+    if(((textc.l->op)[0]==NULL ) && ((textc.l->op)[1]==NULL)){
       if(lex->type==registre){
 
         if(val>31 || val<0){
@@ -207,6 +207,18 @@ else if(dico[indiceDico].type=='B'){
       return 1;
     }
   }
+  else if((textc.l->op)[0]!=NULL && (textc.l->op)[1]!=NULL && (textc.l->op)[2]==NULL  ){
+    if(lex->type == registre){
+    if(val>31 || val<0){
+        printf("La valeur d'un des registres n'est pas valide \n");
+        printf("a la ligne : %d\n",lex->line);
+        return(0);}
+        else{return(1);}
+  }
+      else{printf("Les opérandes portant sur les registres ne sont pas du bons types\n");
+      printf("a la ligne : %d\n",lex->line);
+        return(0);}
+    }
   else{printf("L'opérande n'est pas du bon type");
   printf("a la ligne : %d\n",lex->line);
   return 0;}

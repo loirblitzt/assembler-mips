@@ -10,8 +10,8 @@ INCDIR=include
 TESTDIR=testing
 DOCDIR=doc
 
-STRASM=tests/testG1data.txt
-STRDICO=tests/simpledico.dico
+STRASM=data/testG1data.s
+STRDICO=data/simpledico.dico
 
 #for unit testing these are the file that are to be compiled
 CODETESTDIR=code_test

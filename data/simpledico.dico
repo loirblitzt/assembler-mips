@@ -1,0 +1,28 @@
+26
+ADD R 3 r r r d s t 000000 , 100000
+ADDI I 3 r r i s t i 001000 , -1
+LW B 3 r o r t o s 100011 , -1
+SLL S 3 r r a d t a 000000 , 000000
+SUB R 3 r r r s t d 000000 , 100010
+BNE L 3 r r l s t l 000101 , -1
+SLT R 3 r r r s t d 000000 , 101010
+J A 1 a a 000010 , -1
+LUI I 2 r i t i 001111 , -1
+AND R 3 r r r d s t 000000 , 100100
+BEQ L 3 r r l s t l 000100 , -1
+BGTZ L 2 r l s l 000111 , -1
+BLEZ L 2 r l s l 000110 , -1
+DIV R 2 r r s t 000000 , 011010
+JAL A 1 a a 000011 , -1
+JR R 1 r s 000000 , 001000
+MFHI R 1 r d 000000 , 010000
+MFLO R 1 r d 000000 , 010010
+MULT R 2 r r s t 000000 , 011000
+OR R 3 r r r d s t 000000 , 100101
+ROTR S 3 r r a d t a 000000 , 000010
+SLT R 3 r r r d s t 000000 , 101010
+SRL S 3 r r a d t a 000000 , 000010
+SUB R 3 r r r d s t 000000 , 100010
+SW B 3 r o r t o s 101011 , -1
+XOR R 3 r r r d s t 000000 , 100110
+

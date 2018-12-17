@@ -1,13 +1,3 @@
-
-
-/**
- * @file lex.c
- * @author François Portet <francois.portet@imag.fr>
- * @brief Lexical analysis routines for MIPS assembly syntax.
- *
- * These routines perform the analysis of the lexeme of an assembly source code file.
- */
-
 #define _POSIX_C_SOURCE 200112L
 #include <stdlib.h>
 #include <stdio.h>
@@ -21,13 +11,104 @@
 #include "fsm.h"
 #include "list.h"
 
-
-/**
- * @param token The pointeur to the lexeme to be extracted.
- * @param current_line The address from which the analysis must be performed.
- * @return the address at which the analysis stopped or NULL if the analysis is terminated.  
- * @brief This function get an input line, extracts a token from it and return the pointeur to the next place where the analysis should continue. 
- */
+void translateReg(char* c , int * modSize){
+    if(!isdigit(c[1])){
+        if(strncmp(c,"$zero",5)==0){
+            *modSize = 3;
+            c[1]='0';
+        }
+        else if(strncmp(c,"$at",3)==0){
+            *modSize = 1;
+            c[1]='1';
+        }
+        else if(strncmp(c,"$gp",3)==0){
+            *modSize = 0;
+            c[1]='2';
+            c[2]='8';
+        }
+        else if(strncmp(c,"$sp",3)==0){
+            *modSize = 0;
+            c[1]='2';
+            c[2]='9';
+        }
+        else if(strncmp(c,"$fp",3)==0){
+            *modSize = 0;
+            c[1]='3';
+            c[2]='0';
+        }
+        else if(strncmp(c,"$ra",3)==0){
+            *modSize = 0;
+            c[1]='3';
+            c[2]='1';
+        }
+        else if(c[1]=='v'){
+            *modSize = 1;
+            switch(c[2]){
+                case '0':
+                c[1]='2';
+                break;
+                case '1':
+                c[1]='3';
+                break;
+            }
+        }
+        else if(c[1]=='a'){
+            *modSize=1;
+            if(c[2]>='0' && c[2]<='3'){
+                c[1]=c[2]+4;
+            }
+        }
+        else if(c[1]=='t'){
+            if(c[2]>='0' && c[2]<='1'){
+                *modSize=1;
+                c[1]=c[2]+8;
+            }
+            else if (c[2]>='2' && c[2]<='7'){
+                c[1] = '1';
+                *modSize = 0;
+                c[2] = c[2] - 2;
+            }
+            else if (c[2]=='8'){
+                *modSize = 0;
+                c[1] = '2';
+                c[2] = '4';
+            }
+            else if(c[2]=='9'){
+                *modSize = 0;
+                c[1] = '2';
+                c[2] = '5';
+            }
+        }
+        else if(c[1]=='s'){
+            if(c[2]>='0'&&c[2]<='3'){
+                *modSize=0;
+                c[2]='1';
+                c[2] = c[2]+6;
+            }
+            else if (c[2]>='4'&&c[2]<='7'){
+                c[1] = '2';
+                *modSize = 0;
+                c[2] = c[2] -4;
+            }
+        }
+        else if(c[1] == 'k'){
+            if(c[2]=='0'){
+                c[1] = '2';
+                c[2] = '6';
+            }
+            else if(c[2]=='1'){
+                c[1] = '2';
+                c[2] = '7';
+            }
+        }
+        else{
+            exit(EXIT_FAILURE);
+        }
+    }
+    else{
+        *modSize =0;
+    }
+}
 
 /* MIPS assembly supports distinctions between lower and upper case*/ 
 char* getNextToken(char** token, char* current_line,LIST* lex,int nline) {
@@ -36,7 +117,7 @@ char* getNextToken(char** token, char* current_line,LIST* lex,int nline) {
     int token_size=0;
     STATE fsm = 0; /* zero value for the enum*/
     char ret = '\n\0';
-
+    int modSize = 0;
     /* check input parameter*/ 
     if (current_line ==NULL) return NULL;
 
@@ -51,8 +132,9 @@ char* getNextToken(char** token, char* current_line,LIST* lex,int nline) {
 	end++; 
     }
     if (needMoreChar(fsm,start,end)) end++;
+    if(fsm == REGISTRE)translateReg(start,&modSize);
     /*compute size : if zero there is no more token to extract*/ 	
-    token_size=end-start;
+    token_size=end-start-modSize;
     /*package the token*/
     if (token_size>0){
     free(*token);
@@ -69,15 +151,6 @@ char* getNextToken(char** token, char* current_line,LIST* lex,int nline) {
 }
 
 
-
-
-/**
- * @param line String of the line of source code to be analysed.
- * @param nline the line number in the source code.
- * @return should return the collection of lexemes that represent the input line of source code.
- * @brief This function performs lexical analysis of one standardized line.
- *
- */
 void lex_read_line( char *line, int nline,LIST* lex) {
     char* token = NULL;
     char* current_address=line;
@@ -88,13 +161,6 @@ void lex_read_line( char *line, int nline,LIST* lex) {
     return;
 }
 
-/**
- * @param file Assembly source code file name.
- * @param nlines Pointer to the number of lines in the file.
- * @return should return the collection of lexemes
- * @brief This function loads an assembly code from a file into memory.
- *
- */
 void lex_load_file( char *file, unsigned int *nlines,LIST* lex ) {
 
     FILE        *fp   = NULL;
