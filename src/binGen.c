@@ -160,8 +160,8 @@ int* makeBinText(COLG col,INSTR * dico ,int * size,int sizeDico,LISTH * TAB){
         l = l->suiv;
         i++;
     }while(l != (col.text.l ->suiv));
-    
-    return tab;    
+
+    return tab;
 }
 
 /* beware the size is the number of bytes in DATA */
@@ -191,7 +191,7 @@ int* makeBinData(COLG col,LISTH * TAB,int * size){
                 cursor[i]=(char)(l->data.byte);
                 i+=1;
             break;
-            case intG:/* .word */   
+            case intG:/* .word */
                 i = l->offset;
                 tab[i/4] = l->data.word;
                 swap(&(tab[i/4]));
@@ -212,6 +212,7 @@ int* makeBinData(COLG col,LISTH * TAB,int * size){
                 }
                 else{
                     tab[i/4] = pList->decalage;
+                    swap(&(tab[i/4]));
                 }
             break;
         }
@@ -268,7 +269,7 @@ char** makeCharSym(LIST * m_strTab,RELOCLIST relocL,int * size){
         sizeArray += strlen(cursorL->data)+1;/* 1 for the \0 */
         cursorL = cursorL -> suiv;
     }while(cursorL != (*m_strTab )->suiv);
-    
+
     /* let's create the array now and fill it*/
     /* we could have chrunk down the size by mixing the two for loops */
     int i = 0;
@@ -304,6 +305,7 @@ uint16_t getSecIndex(SECTIONH a){
 }
 /* Elf32 same size than strtab */
 Elf32_Sym* makeStructSym(RELOCLIST relocL, LIST m_strTab,section strtab,section shstrtab, int size,LISTH * TAB){
+    if(size ==0)return NULL;
     Elf32_Sym* res = (Elf32_Sym*)calloc(size,sizeof(Elf32_Sym));
     /* char *  from tab of all the symb */
     LIST l =m_strTab->suiv;
@@ -348,7 +350,7 @@ int getSymNum(LIST l,char * name){
     int res = 5;
     return res;
 }
-struct relSection makeStructReloc(RELOCLIST relocL,section strtab,section shstrab,section symtab, LIST m_strTab){ 
+struct relSection makeStructReloc(RELOCLIST relocL,section strtab,section shstrab,section symtab, LIST m_strTab){
     /* pareil renvoie taille du bordel / voir aussi pour faire que data et que bss */
     /* what is the size ? */
     /* initialuisation of the struct */
@@ -358,7 +360,7 @@ struct relSection makeStructReloc(RELOCLIST relocL,section strtab,section shstra
 
     if(relocL == NULL)return out;
     RELOCLIST l = relocL->suiv;
-    
+
     /* mesure the size of the array */
     do{
         if(l->sec == data)out.sizeRelData++;
@@ -391,7 +393,7 @@ struct relSection makeStructReloc(RELOCLIST relocL,section strtab,section shstra
                         out.data[indData].r_info = ELF32_R_INFO(elf_get_sym_index_from_name(symtab,shstrab,strtab,".data"),l->relocType);
                     break;
                 }
-            }            
+            }
             indData++;
         }
         else if(l->sec == text){
@@ -420,6 +422,7 @@ struct relSection makeStructReloc(RELOCLIST relocL,section strtab,section shstra
 }
 
 void free_m_TAB(char** TAB,int size){
+	if(TAB!=NULL){
     free(TAB[0]);
-    free(TAB);
+    free(TAB);}
 }

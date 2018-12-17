@@ -23,7 +23,7 @@ int erreurDirective(STATEG2 state, char *lex2){
   return(0);
   }
   else if (state==attArgAsciiz){
-    if (strlen((char*)lex2)<18){ /* a verif */
+    if (/*strlen((char*)lex2)<18*/1){ /* a verif */
     return(1);
   }
   return(0);
@@ -34,7 +34,11 @@ int erreurInstruction(LIST lex, TEXTCOL textc, INSTR * dico, int sizeDico){
 
   int indiceDico = textc.l->instr;
   long int val ;
+  int i;
   if (lex->type == registre){
+  	for(i=1;i<strlen(lex->data);i++){
+  		if(!isdigit(*((char*)(lex->data)+i)))return 0;
+  	}
       val = strtol((lex->data)+1,NULL,0);
     }
   if(dico[indiceDico].type=='R'){
@@ -125,7 +129,7 @@ int erreurInstruction(LIST lex, TEXTCOL textc, INSTR * dico, int sizeDico){
         printf("a la ligne : %d\n",lex->line);
         return(0);
     }
-    
+
     else{return(1);}
 
   }
@@ -256,6 +260,9 @@ else if(dico[indiceDico].type=='B'){
       else{return(1);}
 
     }
+    else if(lex->type == symb){
+      		return 1;
+    }
     else{printf("Le jump n'est pas du bon type");
     printf("a la ligne : %d\n",lex->line);
     return(0);}
@@ -304,10 +311,10 @@ else if(dico[indiceDico].type=='B'){
 
   else if(dico[indiceDico].type=='A'){/* absolu */
       if(((textc.l->op)[0]==NULL) ||(textc.l->op)[1]==NULL){
-      if (lex->type==hexa || lex->type==decimal){        
-        
+      if (lex->type==hexa || lex->type==decimal){
+
         long int d = strtol(lex->data,NULL,0);
-        
+
         if(d<-134217728 || d>134217727|| d%4!=0){/* a check */
           printf("La valeur du jump n'est pas valide (penser au modulo 4)\n");
           printf("a la ligne : %d\n",lex->line);

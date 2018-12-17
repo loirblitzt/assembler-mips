@@ -92,9 +92,9 @@ int fakeMain(COLG col,RELOCLIST relocL,LIST m_strTab,char* nameOut,LISTH * TAB ,
 
     free_m_TAB(sym_char,sizeChar);
 
-    del_section(     text );
-    del_section(     data );
-    del_section(      bss );
+    if(text !=NULL){del_section(     text );}
+    if(data !=NULL){del_section(     data );}
+    if(bss != NULL){ del_section(      bss );}
     del_section( shstrtab );
     del_section(   strtab );
     del_section(   symtab );

@@ -1,0 +1,3 @@
+# TEST_RETURN_CODE = FAIL
+.tex
+	XOR $1,$2,$3

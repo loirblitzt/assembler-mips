@@ -7,7 +7,7 @@ LIST createList(){
 
 LIST addToList (LIST l, void* data , TYPE t, int line,char realType, char headTail){
     LIST a = (LIST)malloc(sizeof(*l));
-	
+
 	/* initialization of the struct element */
 	a -> data = malloc(sizeFromType(t,data,realType)+1);
 	if(a->data == NULL){return l;}
@@ -25,7 +25,7 @@ LIST addToList (LIST l, void* data , TYPE t, int line,char realType, char headTa
 	a -> trueType = realType;
 
 	if (headTail == 0){return a;}
-	
+
 	else if (headTail== 1)
 	{
 		return l;
@@ -39,7 +39,7 @@ LIST addHead(LIST l, void* data, TYPE t, int line,char realType){
 /* special fonction that specifie the size (taille) of a string */
 LIST addHead2(LIST l, void* data, TYPE t, int line,int taille){
 	LIST a = (LIST)malloc(sizeof(*l));
-	
+
 	/* initialization of the struct element */
 	a -> data = malloc(taille*sizeof(char));
 	memcpy((a -> data),data,taille*sizeof(char)); /* copy the data onto the struct */
@@ -100,7 +100,7 @@ size_t sizeFromType(TYPE t, void* data,char realType){
 			break;
 	}
 	/* if not implemented*/
-	return 0; 
+	return 0;
 }
 
 char* stringType[] = {
@@ -157,14 +157,14 @@ void printData(LIST l){
 		case hexa :
 		case decimal :
 			printf("data : %d\n",*(int*)(l->data));
-		break;		
+		break;
 		}
 	}
 	printf("\033[34;1m----------------------------\033[0m\n");
 }
 
 void printAllData(LIST l){
-	if(l==NULL) {printf("\033[31merror : liste vide\033[0m\n");return;}
+	if(l==NULL) {printf("\033[31m liste vide\033[0m\n");return;}
 	LIST cursorL = l->suiv;
 	do{
 		printData(cursorL);
@@ -177,7 +177,7 @@ void freeElement(LIST l){
 }
 
 void freeAllElements(LIST l){
-	if(l==NULL) {printf("\033[31merror : liste vide\033[0m\n");return;}
+	if(l!=NULL) {
 	LIST c = l-> suiv;
 	l->suiv = NULL;
 	while (c != NULL){
@@ -186,8 +186,12 @@ void freeAllElements(LIST l){
 		c = tmp;
 	}
 }
+else{
+  printf("\033[31m liste vide\033[0m\n");
+}
+}
 
-/* checks if is the number is the begining of a 
+/* checks if is the number is the begining of a
 	number - ( - register - )
 	pattern */
 char isNumberOk(LIST l){

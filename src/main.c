@@ -67,7 +67,7 @@ int main ( int argc, char *argv[] ) {
         namedico = argv[argc-1];
         dico = loadDico(namedico,&sizeDico);
     }
-    
+
     /* -----------------reading the dico -----------------------------*/
     if(dico == NULL){
         printf("Not able to read dico \n");
@@ -79,14 +79,16 @@ int main ( int argc, char *argv[] ) {
     }
 
     /* ---------------- do the lexical analysis -------------------*/
-    
+
     lex_load_file( file, &nlines, &lex );
     DEBUG_MSG("source code got %d lines",nlines);
     printAllData(lex);
 
     /*-------------------grammar 1 & 2 analysis------------------------*/
-    G1LoadLex(lex,&col,dico,sizeDico,TAB,&reloclist,&m_strTab);
-    updateReloc(reloclist, TAB); 
+    int flag = 0;
+    G1LoadLex(lex,&col,dico,sizeDico,TAB,&reloclist,&m_strTab,&flag);
+    if(flag==1)exit(EXIT_FAILURE);
+    updateReloc(reloclist, TAB);
 
     printColG(col.data);
     printColG(col.bss);
@@ -102,8 +104,8 @@ int main ( int argc, char *argv[] ) {
 
     /* ---------------- Free memory and terminate------------------*/
 
-    freeAllElements(lex);
-    freeAllElements(m_strTab);
+    if(lex!=NULL)freeAllElements(lex);
+    if(m_strTab!=NULL)freeAllElements(m_strTab);
     freeColG(col.data);freeColT(col.text);freeColG(col.bss);
     freeDico(dico,sizeDico);
     suppTab(TAB,N);
@@ -121,7 +123,7 @@ int main ( int argc, char *argv[] ) {
 
 
 
-    /* 
+    /*
     WARNING_MSG("Un message WARNING_MSG !");
     INFO_MSG("Un message INFO_MSG : Debut du programme %s", argv[0]);
 
