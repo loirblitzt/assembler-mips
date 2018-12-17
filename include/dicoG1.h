@@ -15,6 +15,10 @@ struct _instr {
 	char * name;
 	char type;
 	char numOp;
+	char opDef[3];
+	char opOrder[3];
+	int opcode;
+	int function;/* -1 if there is no function */
 }; typedef struct _instr INSTR;
 
 INSTR* loadDico(char * nameFile,int *);

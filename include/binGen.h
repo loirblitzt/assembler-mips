@@ -39,15 +39,17 @@ struct relSection{
 
 void swap(union instrBin * a);
 
-int* makeBinText(COLG col,int * size);
+int* makeBinText(COLG col,INSTR * dico ,int * size,int sizeDico,LISTH * TAB);
 
-int* makeBinData(COLG col,int * size);
+int* makeBinData(COLG col,LISTH * TAB,int * size);
 
 unsigned int makeBinBss(COLG col);
 
 char** makeCharSym(LIST * m_strTab,RELOCLIST relocL,int * size);
 
 Elf32_Sym* makeStructSym(RELOCLIST relocL, LIST m_strTab,section strtab,
-                        section shstrtab, int size); /* TODO: renvoyer taille du bordel  */
+                        section shstrtab, int size,LISTH * TAB); 
 
-struct relSection makeStructReloc(RELOCLIST relocL,section strtab,section shstrab,section symtab); /* pareil renvoie taille du bordel / voir aussi pour faire que data et que bss */
+struct relSection makeStructReloc(RELOCLIST relocL,section strtab,section shstrab,section symtab, LIST m_strTab); /* pareil renvoie taille du bordel / voir aussi pour faire que data et que bss */
+
+void free_m_TAB(char** TAB,int size);

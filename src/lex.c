@@ -82,7 +82,7 @@ void lex_read_line( char *line, int nline,LIST* lex) {
     char* token = NULL;
     char* current_address=line;
     while( (current_address= getNextToken(&token, current_address,lex,nline)) != NULL){ 
-        puts(token);
+       /*  puts(token); */
     }
     free(token);
     return;

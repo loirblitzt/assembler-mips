@@ -103,13 +103,13 @@ char replaceInstr(LIST  lex,int indPInstr){
         break;
         /* HALL OF THE WORST TO IMPLEMENT */
         case 5:/* LW */
-            if(l->suiv != NULL && (l->suiv->type == registre )
-                && l->suiv->suiv != NULL && ((l->suiv)->suiv->type ==virgule) 
-                && l->suiv->suiv->suiv != NULL && (l->suiv)->suiv->suiv->type == symb 
-                && l->suiv->suiv->suiv->suiv != NULL && (l->suiv)->suiv->suiv->suiv != parentheseg ){
+            if(l->suiv != NULL && (l->suiv->type == registre )\
+                && l->suiv->suiv != NULL && ((l->suiv)->suiv->type ==virgule) \
+                && l->suiv->suiv->suiv != NULL && (l->suiv)->suiv->suiv->type == symb \
+                && l->suiv->suiv->suiv->suiv != NULL && (l->suiv)->suiv->suiv->suiv->type != parentheseg ){
                     free(l->data);
-                    l->data = malloc((strlen("LUI"))*sizeof(char));
-	                memcpy((l -> data),"LUI",(strlen("LUI"))*sizeof(char));
+                    l->data = malloc((strlen("LUI")+1)*sizeof(char));
+	                memcpy((l -> data),"LUI",(strlen("LUI")+1)*sizeof(char));
                     l->type = symb;
                     l= l->suiv;
                     if(l->type!=registre)return 0;
@@ -121,14 +121,14 @@ char replaceInstr(LIST  lex,int indPInstr){
                     l->trueType=1;
                     target=l;
                     l = l->suiv;
-                    l = addHead2(l,"\n",retourLine,lex->line,2);
                     l = addHead2(l,"LW",symb,lex->line,3);
-                    l = addHead2(l,(char*)(reg->data),registre,lex->line,3);
+                    l = addHead2(l,(char*)(reg->data),registre,lex->line,strlen(reg->data)+1);
                     l = addHead2(l,",",virgule,lex->line,2);
-                    l = addHead2(l,target->data,symb,lex->line,strlen(target)+1);/* TODO:verify the length of target */
+                    l = addHead2(l,(char*)(target->data),symb,lex->line,strlen(target->data)+1);
                     l = addHead2(l,"(",parentheseg,lex->line,2);
                     l = addHead2(l,"$1",registre,lex->line,3);
                     l = addHead2(l,")",parenthesed,lex->line,2);
+                    l = addHead2(l,"\n",retourLine,lex->line,2);
                 }
                 else {
                     return 0;
@@ -136,13 +136,13 @@ char replaceInstr(LIST  lex,int indPInstr){
         
         break;
         case 6:/* SW */
-            if(l->suiv != NULL && (l->suiv->type == registre )
-                && l->suiv->suiv != NULL && ((l->suiv)->suiv->type ==virgule) 
-                && l->suiv->suiv->suiv != NULL && (l->suiv)->suiv->suiv->type == symb 
-                && l->suiv->suiv->suiv->suiv != NULL && (l->suiv)->suiv->suiv->suiv != parentheseg ){
+            if(l->suiv != NULL && (l->suiv->type == registre )\
+                && l->suiv->suiv != NULL && ((l->suiv)->suiv->type ==virgule) \
+                && l->suiv->suiv->suiv != NULL && (l->suiv)->suiv->suiv->type == symb \
+                && l->suiv->suiv->suiv->suiv != NULL && (l->suiv)->suiv->suiv->suiv->type != parentheseg ){
                     free(l->data);
-                    l->data = malloc((strlen("LUI"))*sizeof(char));
-	                memcpy((l -> data),"LUI",(strlen("LUI"))*sizeof(char));
+                    l->data = malloc((strlen("LUI")+1)*sizeof(char));
+	                memcpy((l -> data),"LUI",(strlen("LUI")+1)*sizeof(char));
                     l->type = symb;
                     l= l->suiv;
                     if(l->type!=registre)return 0;
@@ -156,7 +156,7 @@ char replaceInstr(LIST  lex,int indPInstr){
                     l = addHead2(l,"$1",registre,lex->line,3);
                     l = addHead2(l,",",virgule,lex->line,2);
                     l = addHead2(l,target->data,retourLine,lex->line,strlen(target->data)+1);
-                    l->trueType = 1;/* used to indicate if it is rmips_up */
+                    l->trueType = 1;/* used to indicate if it is rmips_up o rmips_down relocation mode */
                     l = addHead2(l,"\n",retourLine,lex->line,2);
                     l = addHead2(l,"SW",symb,lex->line,3);
                     l = l->suiv;
@@ -269,8 +269,8 @@ STATEG1 updateSTATEG1(LIST lex,STATEG1 state,SECTION* psec,COLG * pcol,INSTR * d
             }
         break;
         case attTextreg:
-            /* TODO: mettre registre dans les op */
-            if(addRegister(lex,pcol->text.l))return error;
+            /* TODO: mettre registre dans les op ou pas ?*/
+            if(addRegister(lex,pcol->text.l)==0)return error;
         case attTextpd:
         case attTextpg:
             return (STATEG1)(state+1);
@@ -286,7 +286,7 @@ STATEG1 updateSTATEG1(LIST lex,STATEG1 state,SECTION* psec,COLG * pcol,INSTR * d
                 /* if symb push into relocLIST */
                 if(lex->type == symb){/* reloc type to be checked */
                     INSTR currInstr = dico[(pcol->text).l->instr];
-                    switch(currInstr.type){/* TODO: reloc pour LUI qui est I mais est tjr en <<16 */
+                    switch(currInstr.type){/* TODO: verif LUI quand pseudo instruction*/
                         case 'I': /* r mips lo16 really ? : yes */
                             if(lex->trueType ==0){
                                 *reloclist = addHeadR(*reloclist,(SECTION)text,(pcol->text).currOffset-4,(RELOCTYPE)mR_MIPS_LO16,seekSymb(/* (char*) */(lex->data),TAB),lex);
@@ -294,6 +294,10 @@ STATEG1 updateSTATEG1(LIST lex,STATEG1 state,SECTION* psec,COLG * pcol,INSTR * d
                             else{
                                 *reloclist = addHeadR(*reloclist,(SECTION)text,(pcol->text).currOffset-4,(RELOCTYPE)mR_MIPS_HI16,seekSymb(/* (char*) */(lex->data),TAB),lex);
                             }
+                        break;
+                        case 'B':
+                                *reloclist = addHeadR(*reloclist,(SECTION)text,(pcol->text).currOffset-4,(RELOCTYPE)mR_MIPS_LO16,seekSymb(/* (char*) */(lex->data),TAB),lex);
+                                return attTextpg;/* because it is in the form XXX $x,label($x) so it needs to be redirected to attTextpg */
                         break;
                         case 'A': /* r mips 26 */
                             *reloclist = addHeadR(*reloclist,(SECTION)text,(pcol->text).currOffset-4,(RELOCTYPE)mR_MIPS_26,seekSymb(/* (char*) */(lex->data),TAB),lex);
@@ -377,8 +381,7 @@ STATEG1 updateSTATEG1(LIST lex,STATEG1 state,SECTION* psec,COLG * pcol,INSTR * d
                 (pcol->data).currentOffset+= ((4-((pcol->data).currentOffset%4))%4);
                 if(packagePending(pendingEtiq,TAB,*psec,(pcol->data).currentOffset)==0){return error;}
                 *reloclist = addHeadR(*reloclist,(SECTION)data,(pcol->data).currentOffset,mR_MIPS_32,seekSymb(/* (char*) */(lex->data),TAB),lex);
-                /* strange value in datacol */
-                addHeadG(&(pcol->data),(DATAG)0,intG,(pcol->data).currentOffset,lex->line);
+                addHeadG(&(pcol->data),(DATAG)((char*)(lex->data)),etiqG,(pcol->data).currentOffset,lex->line);
                 (pcol->data).currentOffset += 4;
             }
             else{

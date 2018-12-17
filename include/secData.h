@@ -17,7 +17,8 @@ enum _typeG1{
 	intG,
 	charG,
 	uintG,
-	symbG
+	symbG,
+	etiqG
 }; typedef enum _typeG1 TYPEG1;
 
 enum _directive{
@@ -45,6 +46,7 @@ union _dataG {
 struct _dataList {
 	DATAG data;	
 	TYPEG1 type;
+	char isLabel;
 /* 	DIRG1 dir; avec le nom de la dir on peut
 	savoir la taille de la donne et ou son utilite
 	 A VOIR */

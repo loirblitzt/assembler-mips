@@ -1,0 +1,31 @@
+30
+ADD R 3 reg reg reg rd rs rt opcode 000000 func 100000
+ADDI I 3 reg reg imm rs rt immediate opcode 001000
+SUB R 3 reg reg reg rs rt rd opcode 000000 func 100010
+MULT R 2 reg reg rs rt opcode 000000 func 011000
+DIV R 2 reg reg rs rt opcode 000000 func 011010
+AND R 3 reg reg reg rs rt rd opcode 000000 func 100100
+OR R 3 reg reg reg rs rt rd opcode 000000 func 100101
+XOR R 3 reg reg reg rs rt rd opcode 000000 func 100110
+ROTR S 3 reg reg sam rt rd shiftamount opcode 000000 func 000010
+SLL S 3 reg reg sam rt rd shiftamount opcode 000000 func 000000
+SRL S 3 reg reg sam rt rd shiftamount 000000 func 000010
+SLT R 3 reg reg reg rs rt rd opcode 00000 func 101010
+LUI I 2 reg imm rt immediate opcode 001111
+MFHI R 1 reg rd opcode 000000 func 010000
+MFLO R 1 reg rd opcode 000000 func 010010
+BEQ I 3 reg reg imm rs rt immediate opcode 000100
+BNE L 3 reg reg rel rs rt imm opcode 000101
+BGTZ L 2 reg rel rs relative opcode 000111
+BLEZ L 2 reg rel rs relative opcode 000110
+J A 1 abs absolute opcode 000010
+JAL A 1 abs absolute opcode 000011
+JR R 1 reg rs opcode 000000 func 001000
+NOP P 0 opcode 000000 func 000000
+LW B 2 reg off rt offset opcode 100011
+SW B 2 reg off rt offset opcode 101011
+MOVE R 2 reg reg rt rs opcode 000000 func 100000
+NEG R 2 reg reg rt rs opcode 000000 func 100010
+LI I 2 reg imm rt immediate opcode 001000
+BLT I 3 reg reg abs rt rs absolute opcode 00000 func 101010
+SYSCALL I 0 opcode 000000 func 001100

@@ -50,14 +50,19 @@ void cleanString(char* s,int size){
 void addHeadG(DATACOL * col, DATAG data, TYPEG1 type, int offset, int nbline){
     DATALIST tmpl = (DATALIST)malloc(sizeof(*tmpl));
 
-    tmpl->type= type; tmpl->offset = offset; tmpl->nbLine = nbline;
-    if (type == symbG){
+    tmpl->type= type; tmpl->offset = offset; tmpl->nbLine = nbline;tmpl->isLabel = 0;
+    if (type == symbG ){
         /* hazardous work ahead : get rid of the " " at the end and beginning */
         cleanString(data.asciiz+1,strlen(data.asciiz)-2);
         (tmpl->data).asciiz = (char*)calloc(strlen(data.asciiz),sizeof(char));
         (tmpl->data).asciiz =strncpy((tmpl->data).asciiz,data.asciiz+1,strlen(data.asciiz)-2);
         /* thank you valgrind */
         /* (tmpl->data).asciiz[strlen(data.asciiz)-1] = '\0' ; */
+    }
+    else if(type == etiqG){
+        /* this is a .word with an label in argument */
+        (tmpl->data).asciiz = (char*)calloc(strlen(data.asciiz)+1,sizeof(char));
+        (tmpl->data).asciiz = strcpy((tmpl->data).asciiz,data.asciiz);
     }
     else{
         tmpl->data = data; /* halla waka bah */
@@ -116,7 +121,7 @@ void printColG(DATACOL col){
 /*suppression*/
 
 void freeElementG(DATALIST l){
-    if (l->type == symbG){
+    if (l->type == symbG || l->type == etiqG){
         free((l->data).asciiz);
     }
     free(l);

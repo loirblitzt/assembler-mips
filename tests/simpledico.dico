@@ -1,8 +1,10 @@
-7
-ADD R 3
-ADDI I 3
-LW I 2
-SLL I 3
-SUB R 3
-BNE L 3
-SLT R 3
+9
+ADD R 3 r r r d s t 000000 , 100000
+ADDI I 3 r r i s t i 001000 , -1
+LW B 3 r o r t o s 100011 , -1
+SLL S 3 r r a d t a 000000 , 000000
+SUB R 3 r r r s t d 000000 , 100010
+BNE L 3 r r l s t l 000101 , -1
+SLT R 3 r r r s t d 000000 , 101010
+J A 1 a a 000010 , -1
+LUI I 2 r i t i 001111 , -1

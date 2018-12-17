@@ -14,6 +14,7 @@
 #include <lex.h>
 #include "list.h"
 #include "gram1.h"
+#include "elfInter.h"
 /**
  * @param exec Name of executable.
  * @return Nothing.
@@ -39,6 +40,7 @@ int main ( int argc, char *argv[] ) {
     unsigned int 	nlines 	= 0;
     char         	 *file 	= NULL;
     char *           namedico = NULL;
+    char *          outputFileName = NULL;
     int sizeDico;
     LIST m_strTab = createList();
     LIST lex = createList();
@@ -64,18 +66,30 @@ int main ( int argc, char *argv[] ) {
        puis la sortie du programme avec un code erreur non nul (EXIT_FAILURE) */
     /* ERROR_MSG("Erreur. Arret du programme"); */
 
-
-    /* if ( argc <3 ) {
+    
+    if ( argc <3 ) {
+        char accept = 'y';/* ; */
         print_usage(argv[0]);
-        exit( EXIT_FAILURE );
-    } */
-
-    /* used to choose the file to be compiled */
-    file  	= "tests/testG1data.txt";/* argv[argc-2]; */
-    namedico = argv[argc-1];
+        printf("\nDo you want to run run the program with default files\n[y\\n] : \n");
+        /* scanf("%c",&accept); */
+        if(accept=='y'){
+            file  	= "tests/testG1data.txt";/* argv[argc-2]; */
+            namedico = argv[argc-1];
+            INSTR * dico = loadDico("tests/simpledico.dico",&sizeDico);
+        }else{
+            exit( EXIT_FAILURE );
+        }
+    }
+    else{
+        /* used to choose the file to be compiled */
+        file  	= argv[argc-2];
+        namedico = argv[argc-1];
+    }
     INSTR * dico = loadDico("tests/simpledico.dico",&sizeDico);
-
-
+    if(dico == NULL){
+        printf("Not able to read dico \n");
+        exit( EXIT_FAILURE);
+    }
     if ( NULL == file/*  || NULL == dico */) {
         fprintf( stderr, "Missing ASM source file, aborting.\n" );
         exit( EXIT_FAILURE );
@@ -86,7 +100,7 @@ int main ( int argc, char *argv[] ) {
     /* ---------------- do the lexical analysis -------------------*/
     lex_load_file( file, &nlines, &lex );
     DEBUG_MSG("source code got %d lines",nlines);
-    printAllData(lex);
+    /* printAllData(lex); */
     /*-------------------grammar 1 & 2 analysis------------------------*/
     G1LoadLex(lex,&col,dico,sizeDico,TAB,&reloclist,&m_strTab);
     updateReloc(reloclist, TAB); 
@@ -96,6 +110,9 @@ int main ( int argc, char *argv[] ) {
     printColT(col.text,dico);
     printTab(TAB);
     printAllElR(reloclist);
+
+    fakeMain(col,reloclist,m_strTab,"out.o",TAB, dico , sizeDico);
+
     /* printAllData(m_strTab); */
     /* test pour le dico
     printf("sizedico : %d\n", sizeDico);

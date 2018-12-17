@@ -1,7 +1,6 @@
 #include "elfInter.h"
 
-int fakeMain(COLG col,RELOCLIST relocL,LIST m_strTab,char* nameOut){
-
+int fakeMain(COLG col,RELOCLIST relocL,LIST m_strTab,char* nameOut,LISTH * TAB ,INSTR * dico ,int sizeDico){
     /* prepare sections*/
     section     text = NULL;
     section     data = NULL;
@@ -17,10 +16,11 @@ int fakeMain(COLG col,RELOCLIST relocL,LIST m_strTab,char* nameOut){
 
     /* make hard coded program data already in big endian */
     int sizeData,sizeText,sizeChar;
-    int * text_prog;    text_prog = makeBinText(col,&sizeText);
-    int * data_prog;    data_prog =  makeBinData(col,&sizeData);
+    /* sizeText = 3; int text_prog[]= {0x20106400,0x04006220,0xFEFF4310}; */
+    int * text_prog;    text_prog = makeBinText(col,dico,&sizeText,sizeDico,TAB);
+    int * data_prog;    data_prog =  makeBinData(col,TAB,&sizeData);
     int bss_prog ;      bss_prog = (int)makeBinBss(col);
-    char ** sym_char;   sym_char =  makeCharSym(m_strTab,relocL,&sizeChar);
+    char ** sym_char;   sym_char =  makeCharSym(&m_strTab,relocL,&sizeChar);
     char* machine = "mips";
     char* name = nameOut;
     /* pelf options */
@@ -52,14 +52,14 @@ int fakeMain(COLG col,RELOCLIST relocL,LIST m_strTab,char* nameOut){
     strtab   = make_strtab_section( sym_char, sizeChar);
 
     Elf32_Sym * syms;
-    syms = makeStructSym(relocL,m_strTab,strtab,shstrtab,sizeChar);
-    symtab   = make_symtab_section( shstrtab, strtab, syms,2);
+    syms = makeStructSym(relocL,m_strTab,strtab,shstrtab,sizeChar,TAB);
+    symtab   = make_symtab_section( shstrtab, strtab, syms,sizeChar);
 
 
     struct relSection relColection;
-    relColection = makeStructReloc(relocL,strtab,shstrtab,sym_char);
-    reltext  = make_rel32_section( ".rel.text", relColection.sizeRelText,relColection.text);
-    reldata  = make_rel32_section( ".rel.data", relColection.sizeRelData,relColection.data);
+    relColection = makeStructReloc(relocL,strtab,shstrtab,symtab,m_strTab);
+    reltext  = make_rel32_section( ".rel.text", relColection.text,relColection.sizeRelText);
+    reldata  = make_rel32_section( ".rel.data", relColection.data,relColection.sizeRelData);
 
 
     /*write these sections in file*/
@@ -79,16 +79,18 @@ int fakeMain(COLG col,RELOCLIST relocL,LIST m_strTab,char* nameOut){
     print_section( bss );
     print_section( strtab );
     print_section( symtab );
-
+    print_section( reltext);
+    print_section( reldata);
 
     /*clean up */
     free(text_prog);
     free(data_prog);
-    free(bss_prog);
-    free(sym_char);/* check valgrind for that */
+    /* free(sym_char); *//* check valgrind for that */
     free(syms);
     free(relColection.data);
     free(relColection.text);
+
+    free_m_TAB(sym_char,sizeChar);
 
     del_section(     text );
     del_section(     data );

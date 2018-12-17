@@ -67,13 +67,15 @@ void freeListR(RELOCLIST l){
 
 /* update non-discovered etiq  */
 void updateReloc(RELOCLIST relocL, LISTH * TAB){
-    RELOCLIST cursor = relocL->suiv;
-    do{
-        if(cursor->pHach == NULL){
-            cursor->pHach = seekSymb((char*)(cursor->lex->data),TAB);
-        }
-        cursor = cursor->suiv;
-    }while(cursor != relocL->suiv);
+    if(relocL != NULL ){
+        RELOCLIST cursor = relocL->suiv;
+        do{
+            if(cursor->pHach == NULL){
+                cursor->pHach = seekSymb((char*)(cursor->lex->data),TAB);
+            }
+            cursor = cursor->suiv;
+        }while(cursor != relocL->suiv);
+    }
 }
 
 /* looks for a struct with a field lex->name equals to name */
