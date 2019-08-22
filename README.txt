@@ -1,3 +1,4 @@
+##ASSEMBLER MIPS PROJECT
 Le code fourni permet d'acquérir des chaînes de caractères d'un fichier et de les afficher à l'écran.  
 
 Le répertoire est organisé ainsi : 
